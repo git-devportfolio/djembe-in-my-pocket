@@ -1,0 +1,37 @@
+/* Enter your custom styles here */
+
+.bg-yellow {
+    background-color: yellow;
+}
+
+.bg-green {
+    background-color: green;
+}
+
+.bg-red {
+    background-color: red;
+}
+
+.bg-white {
+    background-color: white;
+}
+
+.bg-light {
+    background-color: #f7f7f7;
+}
+
+.shadow-sm {
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+}
+
+.login-title {
+    font-size: xx-large;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.rounded {
+    border-radius: 3px;
+}
