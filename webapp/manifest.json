@@ -74,18 +74,18 @@
 				"clearControlAggregation": false
 			},
 			"routes": [{
-				"name": "Login",
+				"name": "SignIn",
 				"pattern": "",
 				"target": [
-					"Login"
+					"SignIn"
 				]
 			}],
 			"targets": {
-				"Login": {
+				"SignIn": {
 					"viewType": "XML",
 					"transition": "slide",
 					"clearControlAggregation": false,
-					"viewName": "Login"
+					"viewName": "SignIn"
 				}
 			}
 		}

@@ -35,3 +35,14 @@
 .rounded {
     border-radius: 3px;
 }
+
+.btn-google-sign-in > .sapMBtnInner .sapMBtnIcon.sapMImg {
+    height: 1.2rem;
+    margin-top: 0.5rem;
+    margin-left: 0.2rem;
+}
+
+.btn-facebook-sign-in > .sapMBtnInner .sapMBtnIcon.sapMImg {
+    height: 1.3rem;
+    margin-top: 0.4rem;
+}

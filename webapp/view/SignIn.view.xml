@@ -1,0 +1,40 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="djembe.in.my.pocket.controller.SignIn"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page title="Login" enableScrolling="false" showHeader="false">
+		<VBox width="auto" alignItems="Center" justifyContent="Center" fitContainer="true">
+			<VBox id="background-login" class="rounded sapUiTinyMargin shadow-sm">
+				<VBox class="sapUiMediumMargin">
+					<VBox class="text-center">
+						<Title text="Sign In" titleStyle="H1" />
+					</VBox>
+					<VBox class="text-center sapUiContentPadding sapUiSmallMarginTop sapUiSmallMarginBottom">
+						<Label text="Vous n’avez pas encore de login ?" design="Bold" class="sapUiSmallMarginBottom"/>
+						<Link text="Créez votre compte"/>
+					</VBox>
+					<VBox class="sapUiTinyMarginBottom">
+						<Label text="Adresse e-mail"/>
+						<Input type="Email"/>
+					</VBox>
+					<VBox class="sapUiMediumMarginBottom">
+						<Label text="Mot de passe"/>
+						<Input type="Password"/>
+					</VBox>
+					<VBox class="text-center sapUiSmallMarginBottom">
+						<Button text="Me connecter" type="Accept" icon="sap-icon://visits"/>
+					</VBox>
+					<VBox class="text-center sapUiSmallMarginBottom">
+						<Link text="Mot de passe oublié ?"/>
+					</VBox>
+					<VBox class="text-center sapUiSmallMarginBottom">
+						<Label text="ou"/>
+					</VBox>
+					<VBox>
+						<Button text="Se connecter avec Google" type="Default" width="100%" icon="assets/img/google-sign-in.svg"
+							class="btn-google-sign-in sapUiTinyMarginBottom"/>
+						<Button text="Se connecter avec Facebook" type="Default" width="100%" icon="assets/img/facebook-sign-in.svg" class="btn-facebook-sign-in"/>
+					</VBox>
+				</VBox>
+			</VBox>
+		</VBox>
+	</Page>
+</mvc:View>

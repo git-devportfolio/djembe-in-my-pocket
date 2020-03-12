@@ -1,9 +1,10 @@
 sap.ui.define([
+	"sap/ui/core/theming/Parameters",
 	"djembe/in/my/pocket/controller/BaseController"
-], function (BaseController) {
+], function (Theming, BaseController) {
 	"use strict";
 
-	return BaseController.extend("djembe.in.my.pocket.controller.Login", {
+	return BaseController.extend("djembe.in.my.pocket.controller.SignIn", {
 
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -28,9 +29,9 @@ sap.ui.define([
 		 * This hook is the same one that SAPUI5 controls get after being rendered.
 		 * @memberOf djembe.in.my.pocket.view.Login
 		 */
-		//	onAfterRendering: function() {
-		//
-		//	},
+		onAfterRendering: function () {
+			this.byId("background-login").$().css("background-color", Theming.get("sapUiFieldBackground"));
+		},
 
 		/**
 		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
