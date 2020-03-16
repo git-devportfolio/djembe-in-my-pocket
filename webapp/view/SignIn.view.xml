@@ -1,29 +1,27 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="djembe.in.my.pocket.controller.SignIn"
 	xmlns:html="http://www.w3.org/1999/xhtml">
-	<Page title="Login" enableScrolling="false" showHeader="false">
+	<Page title="Sign In" enableScrolling="false" showHeader="false">
 		<VBox width="auto" alignItems="Center" justifyContent="Center" fitContainer="true">
-			<VBox id="background-login" class="rounded sapUiTinyMargin shadow-sm">
+			<VBox id="SignIn-Form" class="rounded sapUiTinyMargin shadow-sm" width="22rem">
 				<VBox class="sapUiMediumMargin">
 					<VBox class="text-center">
-						<Title text="Sign In" titleStyle="H1" />
+						<Title text="Se connecter" titleStyle="H1" />
 					</VBox>
-					<VBox class="text-center sapUiContentPadding sapUiSmallMarginTop sapUiSmallMarginBottom">
-						<Label text="Vous n’avez pas encore de login ?" design="Bold" class="sapUiSmallMarginBottom"/>
-						<Link text="Créez votre compte"/>
+					<VBox class="text-center sapUiContentPadding sapUiSmallMarginTop sapUiTinyMarginBottom">
+						<Label text="Vous n’avez pas encore de compte ?" design="Bold" class="sapUiSmallMarginBottom"/>
+						<Link id="linkSignUp" text="Créez votre compte" press="onLinkSignUpPress" />
 					</VBox>
 					<VBox class="sapUiTinyMarginBottom">
-						<Label text="Adresse e-mail"/>
-						<Input type="Email"/>
+						<Input type="Email" placeholder="Adresse email" />
 					</VBox>
-					<VBox class="sapUiMediumMarginBottom">
-						<Label text="Mot de passe"/>
-						<Input type="Password"/>
+					<VBox class="sapUiTinyMarginBottom">
+						<Input type="Password" placeholder="Mot de passe" />
 					</VBox>
 					<VBox class="text-center sapUiSmallMarginBottom">
-						<Button text="Me connecter" type="Accept" icon="sap-icon://visits"/>
+						<Button text="Me connecter" type="Accept" icon="sap-icon://visits" width="100%" />
 					</VBox>
 					<VBox class="text-center sapUiSmallMarginBottom">
-						<Link text="Mot de passe oublié ?"/>
+						<Link id="linkPwForget" text="Mot de passe oublié ?" press="onLinkPwForgetPress" />
 					</VBox>
 					<VBox class="text-center sapUiSmallMarginBottom">
 						<Label text="ou"/>

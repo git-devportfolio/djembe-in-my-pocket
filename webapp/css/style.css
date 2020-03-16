@@ -24,16 +24,16 @@
     box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
 }
 
-.login-title {
-    font-size: xx-large;
-}
-
 .text-center {
     text-align: center;
 }
 
 .rounded {
     border-radius: 3px;
+}
+
+.border-top {
+	border-top: 1px solid #f7f7f7;
 }
 
 .btn-google-sign-in > .sapMBtnInner .sapMBtnIcon.sapMImg {

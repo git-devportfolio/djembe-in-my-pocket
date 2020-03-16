@@ -75,17 +75,41 @@
 			},
 			"routes": [{
 				"name": "SignIn",
+				"pattern": "SignIn",
+				"target": [
+					"SignIn"
+				]
+			}, {
+				"name": "SignIn",
 				"pattern": "",
 				"target": [
 					"SignIn"
+				]
+			}, {
+				"name": "SignUp",
+				"pattern": "SignUp",
+				"target": [
+					"SignUp"
+				]
+			}, {
+				"name": "PwForget",
+				"pattern": "PwForget",
+				"target": [
+					"PwForget"
 				]
 			}],
 			"targets": {
 				"SignIn": {
 					"viewType": "XML",
-					"transition": "slide",
-					"clearControlAggregation": false,
 					"viewName": "SignIn"
+				},
+				"SignUp": {
+					"viewType": "XML",
+					"viewName": "SignUp"
+				},
+				"PwForget": {
+					"viewType": "XML",
+					"viewName": "PwForget"
 				}
 			}
 		}

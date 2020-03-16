@@ -1,0 +1,35 @@
+<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="djembe.in.my.pocket.controller.SignUp"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<Page title="Sign Up" enableScrolling="false" showHeader="false">
+		<VBox width="auto" alignItems="Center" justifyContent="Center" fitContainer="true">
+			<VBox id="SignUp-Form" class="rounded sapUiTinyMargin shadow-sm" width="22rem">
+				<VBox class="sapUiMediumMargin">
+					<VBox class="text-center">
+						<Title text="S'inscrire" titleStyle="H1"/>
+					</VBox>
+					<VBox class="text-center sapUiContentPadding sapUiTinyMarginTop">
+						<Label text="Inscrivez-vous maintenant !" design="Bold" class="sapUiSmallMarginBottom"/>
+					</VBox>
+					<VBox class="sapUiTinyMarginBottom">
+						<Input type="Email" placeholder="Adresse email"/>
+					</VBox>
+					<VBox class="sapUiSmallMarginBottom">
+						<Button text="Continuer" type="Accept" width="100%"/>
+					</VBox>
+					<VBox class="text-center sapUiSmallMarginBottom">
+						<Label text="ou"/>
+					</VBox>
+					<VBox>
+						<Button text="Continuer avec Google" type="Default" width="100%" icon="assets/img/google-sign-in.svg"
+							class="btn-google-sign-in sapUiTinyMarginBottom"/>
+						<Button text="Continuer avec Facebook" type="Default" width="100%" icon="assets/img/facebook-sign-in.svg" class="btn-facebook-sign-in"/>
+					</VBox>
+					<VBox class="text-center sapUiMediumMarginTop">
+						<Label text="Vous avez déjà un compte ?" design="Bold" class="sapUiSmallMarginBottom"/>
+						<Link id="linkSignIn" text="Connectez-vous" press="onLinkSignInPress" />
+					</VBox>
+				</VBox>
+			</VBox>
+		</VBox>
+	</Page>
+</mvc:View>

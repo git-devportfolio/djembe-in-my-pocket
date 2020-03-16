@@ -6,12 +6,12 @@ sap.ui.define([
 ], function (Theming, BaseController, JSONModel, Constant) {
 	"use strict";
 
-	return BaseController.extend("djembe.in.my.pocket.controller.SignIn", {
+	return BaseController.extend("djembe.in.my.pocket.controller.PwForget", {
 		///////////////////////////////////////////////////////////////////////
 		//	ATTRIBUTES
 		///////////////////////////////////////////////////////////////////////
 
-		__targetName: "SignIn",
+		__targetName: "PwForget",
 
 		///////////////////////////////////////////////////////////////////////
 		//	LIFECYCLE EVENTS
@@ -44,7 +44,7 @@ sap.ui.define([
 		/**
 		 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered
 		 * (NOT before the first rendering! onInit() is used for that one!).
-		 * @memberOf djembe.in.my.pocket.view.Login
+		 * @memberOf djembe.in.my.pocket.view.SignUp
 		 */
 		//	onBeforeRendering: function() {
 		//
@@ -53,39 +53,29 @@ sap.ui.define([
 		/**
 		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
 		 * This hook is the same one that SAPUI5 controls get after being rendered.
-		 * @memberOf djembe.in.my.pocket.view.Login
+		 * @memberOf djembe.in.my.pocket.view.SignUp
 		 */
 		onAfterRendering: function () {
-			var oSignInForm = this.byId("SignIn-Form").$();
-			oSignInForm.css("background-color", Theming.get("sapUiFieldBackground"));
+			var oPwForgetForm = this.byId("PwForget-Form").$();
+			oPwForgetForm.css("background-color", Theming.get("sapUiFieldBackground"));
 		},
 
 		/**
 		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
-		 * @memberOf djembe.in.my.pocket.view.Login
+		 * @memberOf djembe.in.my.pocket.view.SignUp
 		 */
 		//	onExit: function() {
 		//
 		//	}
 
 		/**
-		 * Nav to create account view
+		 * Nav to sign in view
 		 * 
 		 * @public
 		 * @param {object} oEvent UI5 event
 		 */
-		onLinkSignUpPress: function (oEvent) {
-			this.navTo(Constant.PAGES.SIGN_UP);
-		},
-
-		/**
-		 * Nav to reset password view
-		 * 
-		 * @public
-		 * @param {object} oEvent UI5 event
-		 */
-		onLinkPwForgetPress: function (oEvent) {
-			this.navTo(Constant.PAGES.PW_FORGET);
+		onLinkSignInPress: function (oEvent) {
+			this.navTo(Constant.PAGES.SIGN_IN);
 		},
 
 		///////////////////////////////////////////////////////////////////////
