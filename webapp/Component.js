@@ -34,7 +34,7 @@ sap.ui.define([
 
 			this.beforeInit();
 
-			this.__initDevice();
+			this.initDevice();
 
 			this.afterInit();
 
@@ -54,37 +54,54 @@ sap.ui.define([
 		 * Function that will be called after UIComponent init but before internal initialization (device and bundle)
 		 * @public
 		 */
-		beforeInit: function () {
-		},
+		beforeInit: function () {},
 
 		/**
 		 * Function that will be before after router initialization
 		 * @public
 		 */
-		afterInit: function () {
-		},
+		afterInit: function () {},
 
 		/**
 		 * Function that will be called after router initialization
 		 * @public
 		 */
 		afterRouting: function () {
-			//OVERRIDE IF NEEDED
+			ExceptionService.getInstance().setRouter(this.getRouter());
 		},
-
-		//////////////////////////////////////////////////////////
-		//
-		// PRIVATE METHODS
-		//
-		/////////////////////////////////////////////////////////
 
 		/**
 		 * Function that initilize device model with all the device informations
 		 *
-		 * @private
+		 * @public
 		 */
-		__initDevice: function () {
+		initDevice: function () {
 			this.setModel(models.createDeviceModel(), "device");
 		},
+
+		/**
+		 * Read firebase-config key in manifest.json
+		 *
+		 * @public
+		 */
+		getFirebaseConfigKey: function () {
+			var oEntry = null;
+			oEntry = this.getMetadata().getManifestEntry("sap.ui5");
+			if (!oEntry) {
+				ExceptionService.getInstance().logFatal(
+					this.getModel("i18n").getResourceBundle().getText("appComponentFirebaseConfigError"),
+					this.getModel("i18n").getResourceBundle().getText("sapui5KeyDoesNotExistInManifestJson")
+				);
+			} else {
+				oEntry = oEntry["firebase-config"];
+				if (!oEntry) {
+					ExceptionService.getInstance().logFatal(
+						this.getModel("i18n").getResourceBundle().getText("appComponentFirebaseConfigError"),
+						this.getModel("i18n").getResourceBundle().getText("firebaseConfigKeyDoesNotExistInManifestJson")
+					);
+				}
+			}
+			return oEntry;
+		}
 	});
 });

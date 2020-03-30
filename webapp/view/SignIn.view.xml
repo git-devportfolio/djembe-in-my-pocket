@@ -1,38 +1,135 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="djembe.in.my.pocket.controller.SignIn"
-	xmlns:html="http://www.w3.org/1999/xhtml">
-	<Page title="Sign In" enableScrolling="false" showHeader="false">
-		<VBox width="auto" alignItems="Center" justifyContent="Center" fitContainer="true">
-			<VBox id="SignIn-Form" class="rounded sapUiTinyMargin shadow-sm" width="22rem">
-				<VBox class="sapUiMediumMargin">
-					<VBox class="text-center">
-						<Title text="Se connecter" titleStyle="H1" />
+<mvc:View 
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core" 
+	xmlns:mvc="sap.ui.core.mvc"  
+	xmlns:form="sap.ui.layout.form"
+	xmlns:html="http://www.w3.org/1999/xhtml" 
+	controllerName="djembe.in.my.pocket.controller.SignIn">
+	
+	<Page 
+		title="Sign In" 
+		enableScrolling="false" 
+		showHeader="false">
+		
+		<VBox 
+			alignItems="Center" 
+			justifyContent="Center" 
+			fitContainer="true">
+			
+				<VBox 
+					width="24rem"
+					id="SignIn-Form">
+			
+					<VBox class="sapUiMediumMargin">
+						
+						<VBox class="text-center">
+							<Title 
+								titleStyle="H1"
+								text="{i18n>signInViewFormTitle}" />
+								
+							<Title 
+								titleStyle="H3"
+								class="sapUiSmallMarginTop"
+								text="{i18n>signInViewFormSubTitle}" />
+						</VBox>
+			 	
+			 			<VBox class="text-center sapUiMediumMarginTop">
+							<Label 
+								text="{i18n>signInViewFormSignUpLabel}" />
+								
+							<Link 
+								press="onLinkSignUpPress"
+								class="sapUiTinyMarginTop"
+								text="{i18n>signInViewFormSignUpLink}" />
+						</VBox>
+						
+						<VBox class="sapUiSmallMarginTop">
+							<form:SimpleForm id="SignIn-SimpleForm-Email">
+								<form:content>
+									
+									<Label 
+										text="{i18n>signInViewFormInputEmail}" 
+										labelFor="SignIn-SimpleForm-Input-Email" />
+									
+									<Input 
+											type="Email" 
+											maxLength="100"
+											valueLiveUpdate="true"
+											value ="{viewModel>/email}"
+											id="SignIn-SimpleForm-Input-Email" 
+											placeholder="{i18n>signInViewFormInputEmail}" />
+									
+									<Label 
+										text="{i18n>signInViewFormInputPawword}" 
+										labelFor="SignIn-SimpleForm-Input-Password" />
+									
+									<VBox>
+										<Input 
+											type="Password" 
+											maxLength="100"
+											valueLiveUpdate="true"
+											value ="{viewModel>/password}"
+											id="SignIn-SimpleForm-Input-Password" 
+											placeholder="{i18n>signInViewFormInputPawword}" />
+											
+										<Button 
+												width="100%"
+												type="Default"
+												class="sapUiMediumMarginTop"
+												press="onSignInButtonPress" 
+												icon="sap-icon://person-placeholder" 
+												text="{i18n>signInViewFormSignInButton}" 
+												enabled="{ parts: [ { path: 'viewModel>/email' },  
+																	{ path: 'viewModel>/password' } ], 
+															formatter: '.isValidForm' }" />
+									</VBox>
+									
+								</form:content>
+							</form:SimpleForm>
+						</VBox>
+							
+						<VBox class="text-center sapUiTinyMarginTop">
+							<Link 
+								id="linkPwForget" 
+								press="onLinkPwForgetPress"
+								text="{i18n>signInViewFormPwForgetLink}" />
+						</VBox>
+						
+						<VBox class="text-center sapUiSmallMarginTop">
+							<Label 
+								text="{i18n>signInViewFormOr}" />
+						</VBox>
+				
+						<VBox>
+							<form:SimpleForm id="SignIn-SimpleForm-Social">
+								<form:content>
+									
+									<VBox>
+										<Button 
+											type="Default" 
+											width="100%"
+											icon="assets/img/google-sign-in.svg"
+											text="{i18n>signInViewFormGoogleSignInButton}" 
+											class="btn-google-sign-in"/>
+										
+										<Button 
+											type="Default" 
+											width="100%" 
+											class="btn-facebook-sign-in  sapUiTinyMarginTop"
+											icon="assets/img/facebook-sign-in.svg"
+											text="{i18n>signInViewFormFacebookSignInButton}" />	
+									</VBox>
+									
+								</form:content>
+							</form:SimpleForm>
+						</VBox>
+					
 					</VBox>
-					<VBox class="text-center sapUiContentPadding sapUiSmallMarginTop sapUiTinyMarginBottom">
-						<Label text="Vous n’avez pas encore de compte ?" design="Bold" class="sapUiSmallMarginBottom"/>
-						<Link id="linkSignUp" text="Créez votre compte" press="onLinkSignUpPress" />
-					</VBox>
-					<VBox class="sapUiTinyMarginBottom">
-						<Input type="Email" placeholder="Adresse email" />
-					</VBox>
-					<VBox class="sapUiTinyMarginBottom">
-						<Input type="Password" placeholder="Mot de passe" />
-					</VBox>
-					<VBox class="text-center sapUiSmallMarginBottom">
-						<Button text="Me connecter" type="Accept" icon="sap-icon://visits" width="100%" />
-					</VBox>
-					<VBox class="text-center sapUiSmallMarginBottom">
-						<Link id="linkPwForget" text="Mot de passe oublié ?" press="onLinkPwForgetPress" />
-					</VBox>
-					<VBox class="text-center sapUiSmallMarginBottom">
-						<Label text="ou"/>
-					</VBox>
-					<VBox>
-						<Button text="Se connecter avec Google" type="Default" width="100%" icon="assets/img/google-sign-in.svg"
-							class="btn-google-sign-in sapUiTinyMarginBottom"/>
-						<Button text="Se connecter avec Facebook" type="Default" width="100%" icon="assets/img/facebook-sign-in.svg" class="btn-facebook-sign-in"/>
-					</VBox>
+					
 				</VBox>
-			</VBox>
+		
 		</VBox>
+		
 	</Page>
+	
 </mvc:View>

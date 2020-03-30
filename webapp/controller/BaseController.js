@@ -2,8 +2,9 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/core/routing/History",
 	"sap/m/MessageBox",
-	"sap/m/MessageToast"
-], function(Controller, History, MessageBox, MessageToast) {
+	"sap/m/MessageToast",
+	"djembe/in/my/pocket/service/FirebaseService"
+], function (Controller, History, MessageBox, MessageToast, FirebaseService) {
 	"use strict";
 
 	return Controller.extend("com.lab.StepRhythm.controller.BaseController", {
@@ -22,11 +23,11 @@ sap.ui.define([
 		//	LIFECYCLE
 		////////////////////////////////////////////////////////////
 
-		onInit: function() {
+		onInit: function () {
 			this.__dialogs = {};
-			if(this.__targetName !== undefined && this.__targetName !== null) {
+			if (this.__targetName !== undefined && this.__targetName !== null) {
 				var targets = typeof this.__targetName === 'string' ? [this.__targetName] : this.__targetName;
-				for(var i = 0; i < targets.length; i++) {
+				for (var i = 0; i < targets.length; i++) {
 					this.getRouter().getRoute(targets[i]).attachPatternMatched(this.__onRouteMatched, this);
 				}
 			}
@@ -41,7 +42,7 @@ sap.ui.define([
 		 * @public
 		 * @returns {object} The app Router
 		 */
-		getRouter: function() {
+		getRouter: function () {
 			return sap.ui.core.UIComponent.getRouterFor(this);
 		},
 
@@ -49,18 +50,19 @@ sap.ui.define([
 		 * Utility to implement the router nav back
 		 * @public
 		 */
-		onNavBack: function(oEvent) {
+		onNavBack: function (oEvent) {
 			var oHistory = History.getInstance();
 			var sPreviousHash = oHistory.getPreviousHash();
 
 			// The history contains a previous entry
-			if(sPreviousHash !== undefined) {
+			if (sPreviousHash !== undefined) {
 				window.history.go(-1);
 			} else {
-				for(var [name, route] of Object.entries(this.getRouter()._oRoutes)) {
-					var toCompare = (this.__homeRoute === undefined || this.__homeRoute === null || this.__homeRoute === "") ? route._oConfig.pattern :
+				for (var [name, route] of Object.entries(this.getRouter()._oRoutes)) {
+					var toCompare = (this.__homeRoute === undefined || this.__homeRoute === null || this.__homeRoute === "") ?
+						route._oConfig.pattern :
 						route._oConfig.name;
-					if(toCompare === this.__homeRoute) {
+					if (toCompare === this.__homeRoute) {
 						this.navTo(route._oConfig.name, this.__homeRouteParams, true);
 						break;
 					}
@@ -72,15 +74,15 @@ sap.ui.define([
 		 * Utility to implement the router nav to
 		 * @public
 		 */
-		navTo: function(sRoute, mData, bReplace) {
+		navTo: function (sRoute, mData, bReplace) {
 			this.getRouter().navTo(sRoute, mData, bReplace);
 		},
 
-		__onRouteMatched: function(oEvent) {
+		__onRouteMatched: function (oEvent) {
 			var args = oEvent.getParameters().arguments;
 			var argsValues = [oEvent, oEvent.getParameters().name];
-			for(var key in args) {
-				if(args.hasOwnProperty(key)) {
+			for (var key in args) {
+				if (args.hasOwnProperty(key)) {
 					var obj = args[key];
 					argsValues.push(obj);
 				}
@@ -92,8 +94,13 @@ sap.ui.define([
 		 * This method must be implemented by each Controller that want to match a routing path
 		 * @public
 		 */
-		onRouteMatched: function(oEvent, routeName) {
+		onRouteMatched: function (oEvent, routeName) {
 			// OVERRIDE ON SUBCLASS
+
+			if (!FirebaseService.getInstance().isAppInit()) {
+				var oConfig = this.getComponent().getFirebaseConfigKey();
+				FirebaseService.getInstance().initializeApp(oConfig);
+			}
 		},
 
 		/**
@@ -101,7 +108,7 @@ sap.ui.define([
 		 * @public
 		 * @returns {object} The Component
 		 */
-		getComponent: function() {
+		getComponent: function () {
 			return this.getOwnerComponent();
 		},
 
@@ -112,7 +119,7 @@ sap.ui.define([
 		 * @param {string} modelName Model name
 		 * @returns {string} The binding path
 		 */
-		getPathFromEvent: function(oEvent, modelName) {
+		getPathFromEvent: function (oEvent, modelName) {
 			var context = oEvent.getSource().getBindingContext(modelName);
 			var sPath = context.getPath().substr(1);
 			return sPath;
@@ -124,9 +131,9 @@ sap.ui.define([
 		 * @param {object} model JSON/OData Model
 		 * @param {string} modelName Model name
 		 */
-		setViewModel: function(model, modelName) {
+		setViewModel: function (model, modelName) {
 			var view = this.getView();
-			if(modelName === null || modelName === undefined) {
+			if (modelName === null || modelName === undefined) {
 				view.setModel(model);
 			} else {
 				view.setModel(model, modelName);
@@ -139,7 +146,7 @@ sap.ui.define([
 		 * @param {string} modelName Model name
 		 * @returns The model
 		 */
-		getViewModel: function(modelName) {
+		getViewModel: function (modelName) {
 			var view = this.getView();
 			var model = modelName === null || modelName === undefined ? view.getModel() : view.getModel(modelName);
 			return model;
@@ -152,7 +159,7 @@ sap.ui.define([
 		 * @param {string} modelName Model name
 		 * @returns The model property
 		 */
-		getViewModelProperty: function(modelName, propertyName) {
+		getViewModelProperty: function (modelName, propertyName) {
 			return this.getViewModel(modelName).getProperty(propertyName);
 		},
 
@@ -163,7 +170,7 @@ sap.ui.define([
 		 * @param {string} modelName Model name
 		 * @param {string} value Property value
 		 */
-		setViewModelProperty: function(modelName, propertyName, value) {
+		setViewModelProperty: function (modelName, propertyName, value) {
 			return this.getViewModel(modelName).setProperty(propertyName, value);
 		},
 
@@ -174,7 +181,7 @@ sap.ui.define([
 		 * @param {string} modelName Model name
 		 * @returns {string} JSON/OData Model
 		 */
-		getViewModelFromEvent: function(oEvent, modelName) {
+		getViewModelFromEvent: function (oEvent, modelName) {
 			var view = this.getView();
 			var model = modelName === null || modelName === undefined ? view.getModel() : view.getModel(modelName);
 			return model.getProperty(oEvent.getSource().getBindingContext().getPath());
@@ -186,9 +193,9 @@ sap.ui.define([
 		 * @param {object} model JSON/OData Model
 		 * @param {string} modelName Model name
 		 */
-		setComponentModel: function(model, modelName) {
+		setComponentModel: function (model, modelName) {
 			var component = this.getOwnerComponent();
-			if(modelName === null || modelName === undefined) {
+			if (modelName === null || modelName === undefined) {
 				component.setModel(model);
 			} else {
 				component.setModel(model, modelName);
@@ -201,7 +208,7 @@ sap.ui.define([
 		 * @param {string} modelName Model name
 		 * @returns The model
 		 */
-		getComponentModel: function(modelName) {
+		getComponentModel: function (modelName) {
 			var component = this.getOwnerComponent();
 			var model = modelName === null || modelName === undefined ? component.getModel() : component.getModel(modelName);
 			return model;
@@ -214,7 +221,7 @@ sap.ui.define([
 		 * @param {string} modelName Model name
 		 * @returns The model property
 		 */
-		getComponentModelProperty: function(modelName, propertyName) {
+		getComponentModelProperty: function (modelName, propertyName) {
 			return this.getComponentModel(modelName).getProperty(propertyName);
 		},
 
@@ -225,7 +232,7 @@ sap.ui.define([
 		 * @param {string} modelName Model name
 		 * @param {string} value Property value
 		 */
-		setComponentModelProperty: function(modelName, propertyName, value) {
+		setComponentModelProperty: function (modelName, propertyName, value) {
 			return this.getComponentModel(modelName).setProperty(propertyName, value);
 		},
 
@@ -236,7 +243,7 @@ sap.ui.define([
 		 * @param {string} modelName Model name
 		 * @returns {string} JSON/OData Model
 		 */
-		getComponentModelFromEvent: function(oEvent, modelName) {
+		getComponentModelFromEvent: function (oEvent, modelName) {
 			var component = this.getOwnerComponent();
 			var model = modelName === null || modelName === undefined ? component.getModel() : component.getModel(modelName);
 			return model.getProperty(oEvent.getSource().getBindingContextPath());
@@ -247,7 +254,7 @@ sap.ui.define([
 		 * @public
 		 * @returns {sap.ui.model.resource.ResourceModel} the resourceModel of the component
 		 */
-		getResourceBundle: function() {
+		getResourceBundle: function () {
 			return this.getOwnerComponent().getModel("i18n").getResourceBundle();
 		},
 
@@ -258,8 +265,8 @@ sap.ui.define([
 		 * @param {array} aParameters translation paramets (can be null)
 		 * @returns {string} The translation of sKey
 		 */
-		getTranslation: function(sKey, aParameters) {
-			if(aParameters === undefined || aParameters === null) {
+		getTranslation: function (sKey, aParameters) {
+			if (aParameters === undefined || aParameters === null) {
 				return this.getResourceBundle().getText(sKey)
 			} else {
 				return this.getResourceBundle().getText(sKey, aParameters)
@@ -275,18 +282,18 @@ sap.ui.define([
 		 *	leading edge, instead of the trailing.
 		 * -----------------------------------------------------------------------
 		 */
-		delayedFunctionCall: function(func, wait, immediate) {
+		delayedFunctionCall: function (func, wait, immediate) {
 			var timeout;
-			return function() {
+			return function () {
 				var args = arguments;
-				var later = function() {
+				var later = function () {
 					timeout = null;
-					if(!immediate) func.apply(this, args);
+					if (!immediate) func.apply(this, args);
 				}.bind(this);
 				var callNow = immediate && !timeout;
 				jQuery.sap.clearDelayedCall(timeout);
 				timeout = jQuery.sap.delayedCall(wait, null, later);
-				if(callNow) func.apply(this, args);
+				if (callNow) func.apply(this, args);
 			};
 		},
 
@@ -301,7 +308,7 @@ sap.ui.define([
 		 * @param {array} MessageBox actions
 		 * @param {object} onCloseCallback MessageBox close callback
 		 */
-		showMessageBox: function(icon, title, message, actions, onCloseCallback) {
+		showMessageBox: function (icon, title, message, actions, onCloseCallback) {
 			var bCompact = !!this.getView().$().closest(".sapUiSizeCompact").length;
 			MessageBox.show(message, {
 				icon: icon,
@@ -323,7 +330,7 @@ sap.ui.define([
 		 * @param {string} event Event name
 		 * @param {object} data Event data
 		 */
-		sendEvent: function(channel, event, data) {
+		sendEvent: function (channel, event, data) {
 			sap.ui.getCore().getEventBus().publish(channel, event, data);
 		},
 
@@ -335,7 +342,7 @@ sap.ui.define([
 		 * @param {object} handler Event handler
 		 * @param {object} listener Event listener
 		 */
-		subscribe: function(channel, event, handler, listener) {
+		subscribe: function (channel, event, handler, listener) {
 			sap.ui.getCore().getEventBus().subscribe(channel, event, handler, listener);
 		},
 
@@ -347,7 +354,7 @@ sap.ui.define([
 		 * @param {object} handler Event handler
 		 * @param {object} listener Event listener
 		 */
-		unSubscribe: function(channel, event, handler, listener) {
+		unSubscribe: function (channel, event, handler, listener) {
 			sap.ui.getCore().getEventBus().unsubscribe(channel, event, handler, listener);
 		},
 
@@ -361,7 +368,7 @@ sap.ui.define([
 		 * @param {string} channel Toast message
 		 * @param {boolean} event Is this a sticky message
 		 */
-		showToast: function(message, sticky) {
+		showToast: function (message, sticky) {
 			MessageToast.show(message, {
 				closeOnBrowserNavigation: !sticky ? false : true
 			});
@@ -377,7 +384,7 @@ sap.ui.define([
 		 * @param {string} dialogId Dialog ID
 		 * @returns The dialog associated to the id
 		 */
-		getDialog: function(dialogId) {
+		getDialog: function (dialogId) {
 			return this.__dialogs[dialogId];
 		},
 
@@ -388,13 +395,13 @@ sap.ui.define([
 		 * @param {string} dialogPath Path to the XML dialog file
 		 * @returns The created dialog
 		 */
-		createDialog: function(dialogId, dialogPath) {
-			if(dialogId === undefined || dialogId === null || dialogId === "") {
+		createDialog: function (dialogId, dialogPath) {
+			if (dialogId === undefined || dialogId === null || dialogId === "") {
 				dialogId = this.DEFAULT_DIALOG_ID;
 			}
 
 			var dialog = this.__dialogs[dialogId];
-			if(!dialog) {
+			if (!dialog) {
 				dialog = sap.ui.xmlfragment(this.getView().getId(), dialogPath, this);
 				this.getView().addDependent(dialog);
 				this.__dialogs[dialogId] = dialog;
@@ -407,14 +414,14 @@ sap.ui.define([
 		 * @public
 		 * @param {string} dialogId Dialog ID
 		 */
-		destroyDialog: function(dialogId) {
-			if(dialogId === undefined || dialogId === null || dialogId === "") {
+		destroyDialog: function (dialogId) {
+			if (dialogId === undefined || dialogId === null || dialogId === "") {
 				dialogId = this.DEFAULT_DIALOG_ID;
 			}
 
 			var dialog = this.__dialogs[dialogId];
-			if(dialog) {
-				if(dialog.close) {
+			if (dialog) {
+				if (dialog.close) {
 					dialog.close();
 				}
 				dialog.destroy();
@@ -434,12 +441,12 @@ sap.ui.define([
 		 * @param {object} openByElement Element to bind the popover to
 		 * @returns The created Popover
 		 */
-		createPopover: function(popoverId, popoverPath, openByElement) {
+		createPopover: function (popoverId, popoverPath, openByElement) {
 			var popover = this.createDialog(popoverId, popoverPath);
 
 			// delay because addDependent will do a async rerendering and the popover will immediately close without it
-			if(openByElement) {
-				jQuery.sap.delayedCall(0, this, function() {
+			if (openByElement) {
+				jQuery.sap.delayedCall(0, this, function () {
 					popover.openBy(openByElement);
 				});
 			}
@@ -451,7 +458,7 @@ sap.ui.define([
 		 * @public
 		 * @param {string} popoverId Popover ID
 		 */
-		destroyPopover: function(popoverId) {
+		destroyPopover: function (popoverId) {
 			this.destroyDialog(popoverId);
 		}
 	});

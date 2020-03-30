@@ -4,9 +4,10 @@ sap.ui.define([], function () {
 	return {
 
 		PAGES: {
-			SIGN_IN : "SignIn",
-			SIGN_UP : "SignUp",
-			PW_FORGET: "PwForget"
+			SIGN_IN: "SignIn",
+			SIGN_UP: "SignUp",
+			PW_FORGET: "PwForget",
+			EXCEPTION: "Exception"
 		}
 	};
 });

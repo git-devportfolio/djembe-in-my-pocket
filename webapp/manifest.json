@@ -75,12 +75,6 @@
 			},
 			"routes": [{
 				"name": "SignIn",
-				"pattern": "SignIn",
-				"target": [
-					"SignIn"
-				]
-			}, {
-				"name": "SignIn",
 				"pattern": "",
 				"target": [
 					"SignIn"
@@ -97,6 +91,12 @@
 				"target": [
 					"PwForget"
 				]
+			}, {
+				"name": "Exception",
+				"pattern": "Exception",
+				"target": [
+					"Exception"
+				]
 			}],
 			"targets": {
 				"SignIn": {
@@ -110,8 +110,21 @@
 				"PwForget": {
 					"viewType": "XML",
 					"viewName": "PwForget"
+				},
+				"Exception": {
+					"viewType": "XML",
+					"viewName": "Exception"
 				}
 			}
+		},
+		"firebase-config": {
+			"apiKey": "AIzaSyBEW-EbqC_XZ4wmDJJQgyOEDO9adxD5Qfk",
+			"authDomain": "djembe-in-my-pocket.firebaseapp.com",
+			"databaseURL": "https://djembe-in-my-pocket.firebaseio.com",
+			"projectId": "djembe-in-my-pocket",
+			"storageBucket": "djembe-in-my-pocket.appspot.com",
+			"messagingSenderId": "284898055441",
+			"appId": "1:284898055441:web:a384bd9d3e47ff32"
 		}
 	}
 }

@@ -1,35 +1,119 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="djembe.in.my.pocket.controller.SignUp"
 	xmlns:html="http://www.w3.org/1999/xhtml">
-	<Page title="Sign Up" enableScrolling="false" showHeader="false">
-		<VBox width="auto" alignItems="Center" justifyContent="Center" fitContainer="true">
-			<VBox id="SignUp-Form" class="rounded sapUiTinyMargin shadow-sm" width="22rem">
+	<Page 
+		title="Sign Up" 
+		enableScrolling="false" 
+		showHeader="false">
+		
+		<VBox 
+			width="auto" 
+			alignItems="Center" 
+			justifyContent="Center" 
+			fitContainer="true">
+			
+			<VBox 
+				width="22rem"
+				id="SignUp-Form" 
+				class="rounded sapUiTinyMargin shadow-sm">
+				
 				<VBox class="sapUiMediumMargin">
+					
 					<VBox class="text-center">
-						<Title text="S'inscrire" titleStyle="H1"/>
+						<Title 
+							text="{i18n>signUpViewFormTitle}" 
+							titleStyle="H1"/>
 					</VBox>
+					
 					<VBox class="text-center sapUiContentPadding sapUiTinyMarginTop">
-						<Label text="Inscrivez-vous maintenant !" design="Bold" class="sapUiSmallMarginBottom"/>
+						<Label 
+							text="{i18n>signUpViewFormSubTitle}" 
+							design="Bold" 
+							class="sapUiSmallMarginBottom" />
 					</VBox>
+					
 					<VBox class="sapUiTinyMarginBottom">
-						<Input type="Email" placeholder="Adresse email"/>
+						<Input 
+							type="Text" 
+							valueLiveUpdate="true"
+							value="{viewModel>/username}"
+							placeholder="{i18n>signUpViewFormInputUserName}" />
 					</VBox>
+					
+					<VBox class="sapUiTinyMarginBottom">
+						<Input 
+							type="Email" 
+							valueLiveUpdate="true"
+							value="{viewModel>/email}"
+							placeholder="{i18n>signUpViewFormInputEmail}"
+							valueStateText="{i18n>signInViewEmailFormatErrorMessage}"
+							valueState="{ parts: [ { path: 'viewModel>/email' } ], 
+											formatter: '.formatter.formatEmailValueState' }" />
+					</VBox>
+					
+					<VBox class="sapUiTinyMarginBottom">
+						<Input 
+							type="Password" 
+							valueLiveUpdate="true"
+							value="{viewModel>/passwordOne}"
+							placeholder="{i18n>signUpViewFormInputPassOne}" />
+					</VBox>
+					
+					<VBox class="sapUiTinyMarginBottom">
+						<Input 
+							type="Password" 
+							valueLiveUpdate="true"
+							value="{viewModel>/passwordTwo}"
+							placeholder="{i18n>signUpViewFormInputPassTwo}" />
+					</VBox>
+					
 					<VBox class="sapUiSmallMarginBottom">
-						<Button text="Continuer" type="Accept" width="100%"/>
+						<Button 
+							width="100%"
+							type="Accept"
+							text="{i18n>signUpViewFormSignUpButton}" 
+							press="onSignUpButtonWithEmailAndPassword"
+							enabled="{ parts: [ { path: 'viewModel>/username'	 },
+												{ path: 'viewModel>/email'		 },
+												{ path: 'viewModel>/passwordOne' },
+												{ path: 'viewModel>/passwordTwo' } ], 
+										formatter: '.isValidForm' }" />
 					</VBox>
+					
 					<VBox class="text-center sapUiSmallMarginBottom">
-						<Label text="ou"/>
+						<Label text="{i18n>signUpViewFormOr}" />
 					</VBox>
+					
 					<VBox>
-						<Button text="Continuer avec Google" type="Default" width="100%" icon="assets/img/google-sign-in.svg"
-							class="btn-google-sign-in sapUiTinyMarginBottom"/>
-						<Button text="Continuer avec Facebook" type="Default" width="100%" icon="assets/img/facebook-sign-in.svg" class="btn-facebook-sign-in"/>
+						<Button 
+							width="100%" 
+							type="Default" 
+							icon="assets/img/google-sign-in.svg"
+							text="{i18n>signUpViewFormGoogleSignInButton}" 
+							class="btn-google-sign-in sapUiTinyMarginBottom" />
+							
+						<Button 
+							width="100%" 
+							type="Default" 
+							class="btn-facebook-sign-in"
+							icon="assets/img/facebook-sign-in.svg" 
+							text="{i18n>signUpViewFormFacebookSignInButton}" />
 					</VBox>
+					
 					<VBox class="text-center sapUiMediumMarginTop">
-						<Label text="Vous avez déjà un compte ?" design="Bold" class="sapUiSmallMarginBottom"/>
-						<Link id="linkSignIn" text="Connectez-vous" press="onLinkSignInPress" />
+						<Label 
+							design="Bold" 
+							class="sapUiSmallMarginBottom" 
+							text="{i18n>signUpViewFormSignInLabel}" />
+						<Link 
+							id="linkSignIn" 
+							press="onLinkSignInPress" 
+							text="{i18n>signUpViewFormSignInLink}" /> 
 					</VBox>
+					
 				</VBox>
 			</VBox>
+			
 		</VBox>
+		
 	</Page>
 </mvc:View>

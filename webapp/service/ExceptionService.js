@@ -1,8 +1,9 @@
 sap.ui.define([
 	"sap/ui/base/Object",
 	"sap/m/MessageBox",
-	"sap/base/Log"
-], function (Object, MessageBox, Log) {
+	"sap/base/Log",
+	"djembe/in/my/pocket/util/Constant"
+], function (Object, MessageBox, Log, Constant) {
 	"use strict";
 
 	var _oInstance = null;
@@ -23,7 +24,29 @@ sap.ui.define([
 	 */
 	var ExceptionService = Object.extend("djembe.in.my.pocket.service.ExceptionService", {
 
+		///////////////////////////////////////////////////////////////////////
+		//	ATTRIBUTES
+		///////////////////////////////////////////////////////////////////////
+
+		__oRouter: "",
+
+		///////////////////////////////////////////////////////////////////////
+		//	CONSTRUCTOR
+		///////////////////////////////////////////////////////////////////////
+
 		constructor: function () {},
+
+		///////////////////////////////////////////////////////////////////////
+		//	PUBLIC METHODS
+		///////////////////////////////////////////////////////////////////////
+		
+		setRouter: function (oRouter) {
+			this.__oRouter = oRouter;
+		},
+
+		getLogEntries: function() {
+			return Log.getLogEntries();	
+		},
 
 		LogInfo: function (sMessage, sDetail) {
 			Log.info(sMessage, sDetail, "djembe.in.my.pocket");
@@ -59,7 +82,7 @@ sap.ui.define([
 		 */
 		onLogEntry: function (oLog) {
 			if (oLog.component.indexOf("djembe.in.my.pocket") !== -1) {
-				MessageBox.error(oLog.message);
+				this.__oRouter.navTo(Constant.PAGES.EXCEPTION);
 			}
 		}
 	});

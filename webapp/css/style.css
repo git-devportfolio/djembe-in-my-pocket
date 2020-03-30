@@ -1,47 +1,71 @@
 /* Enter your custom styles here */
 
-.bg-yellow {
-    background-color: yellow;
-}
+/*.bg-yellow {*/
+/*    background-color: yellow;*/
+/*}*/
 
-.bg-green {
-    background-color: green;
-}
+/*.bg-green {*/
+/*    background-color: green;*/
+/*}*/
 
-.bg-red {
-    background-color: red;
-}
+/*.bg-red {*/
+/*    background-color: red;*/
+/*}*/
 
-.bg-white {
-    background-color: white;
-}
+/*.bg-white {*/
+/*    background-color: white;*/
+/*}*/
 
-.bg-light {
-    background-color: #f7f7f7;
-}
+/*.bg-light {*/
+/*    background-color: #f7f7f7;*/
+/*}*/
 
+/* 
+	Utility shadow
+*/
 .shadow-sm {
-    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .085);
 }
 
+/* 
+	Utility 
+*/
 .text-center {
     text-align: center;
 }
 
+/* 
+	Utility 
+*/
 .rounded {
-    border-radius: 3px;
+    border-radius: 5px;
 }
 
-.border-top {
-	border-top: 1px solid #f7f7f7;
-}
+/* 
+	Utility 
+*/
+/*.message-strip {*/
+/*	left: .5rem;*/
+/*	right: .5rem;*/
+/*	position: absolute;	*/
+/*}*/
 
+/*.border-top {*/
+/*	border-top: 1px solid #f7f7f7;*/
+/*}*/
+
+/* 
+	Google Sign-In button in SignIn/SignUp View 
+*/
 .btn-google-sign-in > .sapMBtnInner .sapMBtnIcon.sapMImg {
     height: 1.2rem;
     margin-top: 0.5rem;
     margin-left: 0.2rem;
 }
 
+/* 
+	Facebook Sign-In button in SignIn/SignUp View 
+*/
 .btn-facebook-sign-in > .sapMBtnInner .sapMBtnIcon.sapMImg {
     height: 1.3rem;
     margin-top: 0.4rem;

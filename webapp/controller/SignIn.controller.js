@@ -2,11 +2,22 @@ sap.ui.define([
 	"sap/ui/core/theming/Parameters",
 	"djembe/in/my/pocket/controller/BaseController",
 	"sap/ui/model/json/JSONModel",
-	"djembe/in/my/pocket/util/Constant"
-], function (Theming, BaseController, JSONModel, Constant) {
+	"djembe/in/my/pocket/util/Constant",
+	"djembe/in/my/pocket/util/Utility",
+	"djembe/in/my/pocket/util/Formatter",
+	"djembe/in/my/pocket/service/FirebaseService",
+	"sap/m/MessageBox"
+], function (Theming, BaseController, JSONModel, Constant, Utility, Formatter, FirebaseService, MessageBox) {
 	"use strict";
 
 	return BaseController.extend("djembe.in.my.pocket.controller.SignIn", {
+
+		///////////////////////////////////////////////////////////////////////
+		//	FORMATTER
+		///////////////////////////////////////////////////////////////////////
+		
+		formatter: Formatter,
+
 		///////////////////////////////////////////////////////////////////////
 		//	ATTRIBUTES
 		///////////////////////////////////////////////////////////////////////
@@ -26,7 +37,6 @@ sap.ui.define([
 			BaseController.prototype.onInit.apply(this, arguments);
 
 			this.__createModel();
-			this.__setBindingForView();
 		},
 
 		/**
@@ -35,7 +45,12 @@ sap.ui.define([
 		 * @param {object} oEvent UI5 event
 		 * @param {string} routeName Name of the route
 		 */
-		onRouteMatched: function (oEvent, routeName) {},
+		onRouteMatched: function (oEvent, routeName) {
+			BaseController.prototype.onRouteMatched.apply(this, arguments);
+
+			// 
+			this.__setBindingForView();
+		},
 
 		///////////////////////////////////////////////////////////////////////
 		//	EVENTS VIEW
@@ -56,8 +71,7 @@ sap.ui.define([
 		 * @memberOf djembe.in.my.pocket.view.Login
 		 */
 		onAfterRendering: function () {
-			var oSignInForm = this.byId("SignIn-Form").$();
-			oSignInForm.css("background-color", Theming.get("sapUiFieldBackground"));
+			// this.byId("SignIn-Form").$().css("background-color", Theming.get("sapUiFieldBackground"));
 		},
 
 		/**
@@ -88,6 +102,46 @@ sap.ui.define([
 			this.navTo(Constant.PAGES.PW_FORGET);
 		},
 
+		/**
+		 * Allows existing users to sign in using their email address and password
+		 * 
+		 * @public
+		 * @param {event} oEvent UI5 event
+		 */
+		onSignInButtonPress: function (oEvent) {
+			var sEmail = this.getViewModelProperty("viewModel", "/email");
+			var sPassword = this.getViewModelProperty("viewModel", "/password");
+
+			var fnSignInCallbackSuccess = function () {
+				debugger;
+				sEmail = sEmail.toLowerCase();
+			};
+
+			var fnSignInCallbackError = function (oError) {
+				MessageBox.error(this.getTranslation("signInViewAuthenticationErrorMessage"));
+			};
+
+			FirebaseService.getInstance()
+				.signInWithEmailAndPassword(sEmail, sPassword)
+				.then(fnSignInCallbackSuccess.bind(this))
+				.catch(fnSignInCallbackError.bind(this));
+		},
+
+		/**
+		 * Enable/Disable signIn button
+		 * 
+		 * @public
+		 */
+		isValidForm: function (sEmail, sPassword) {
+			if (!Utility.isValidEmail(sEmail)) {
+				return false;
+			}
+			if (!sPassword) {
+				return false;
+			}
+			return true;
+		},
+
 		///////////////////////////////////////////////////////////////////////
 		//	PRIVATE METHOD
 		///////////////////////////////////////////////////////////////////////
@@ -97,16 +151,20 @@ sap.ui.define([
 		 * @private
 		 */
 		__createModel: function () {
-			var viewModel = new JSONModel();
-			this.setViewModel(viewModel, "viewModel");
+			this.setViewModel(new JSONModel({
+				"email": "",
+				"password": ""
+			}), "viewModel");
 		},
 
 		/**
-		 * init view controls binding  
+		 *    
+		 * 
 		 * @private
 		 */
-		__setBindingForView: function () {}
+		__setBindingForView: function () {
 
+		}
 	});
 
 });

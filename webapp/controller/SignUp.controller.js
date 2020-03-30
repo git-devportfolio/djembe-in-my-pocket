@@ -1,11 +1,22 @@
 sap.ui.define([
 	"sap/ui/core/theming/Parameters",
 	"djembe/in/my/pocket/controller/BaseController",
-	"sap/ui/model/json/JSONModel"
-], function (Theming, BaseController, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"djembe/in/my/pocket/util/Constant",
+	"djembe/in/my/pocket/util/Utility",
+	"djembe/in/my/pocket/util/Formatter",
+	"djembe/in/my/pocket/service/FirebaseService",
+	"sap/m/MessageBox"
+], function (Theming, BaseController, JSONModel, Constant, Utility, Formatter, FirebaseService, MessageBox) {
 	"use strict";
 
 	return BaseController.extend("djembe.in.my.pocket.controller.SignUp", {
+		///////////////////////////////////////////////////////////////////////
+		//	FORMATTER
+		///////////////////////////////////////////////////////////////////////
+
+		formatter: Formatter,
+
 		///////////////////////////////////////////////////////////////////////
 		//	ATTRIBUTES
 		///////////////////////////////////////////////////////////////////////
@@ -25,7 +36,6 @@ sap.ui.define([
 			BaseController.prototype.onInit.apply(this, arguments);
 
 			this.__createModel();
-			this.__setBindingForView();
 		},
 
 		/**
@@ -34,7 +44,11 @@ sap.ui.define([
 		 * @param {object} oEvent UI5 event
 		 * @param {string} routeName Name of the route
 		 */
-		onRouteMatched: function (oEvent, routeName) {},
+		onRouteMatched: function (oEvent, routeName) {
+			BaseController.prototype.onRouteMatched.apply(this, arguments); // Initialize Firebase if not
+
+			this.__setBindingForView();
+		},
 
 		///////////////////////////////////////////////////////////////////////
 		//	EVENTS VIEW
@@ -55,8 +69,7 @@ sap.ui.define([
 		 * @memberOf djembe.in.my.pocket.view.SignUp
 		 */
 		onAfterRendering: function () {
-			var oSignUpForm = this.byId("SignUp-Form").$();
-			oSignUpForm.css("background-color", Theming.get("sapUiFieldBackground"));
+			this.byId("SignUp-Form").$().css("background-color", Theming.get("sapUiFieldBackground"));
 		},
 
 		/**
@@ -77,6 +90,56 @@ sap.ui.define([
 			this.navTo("SignIn");
 		},
 
+		/**
+		 * Allows existing users to sign in using their email address and password
+		 * 
+		 * @public
+		 * @param {event} oEvent UI5 event
+		 */
+		onSignUpButtonWithEmailAndPassword: function (oEvent) {
+			
+			return;
+			
+			var sUsername = this.getViewModelProperty("viewModel", "/username");
+			var sEmail = this.getViewModelProperty("viewModel", "/email");
+			var sPasswordOne = this.getViewModelProperty("viewModel", "/passwordOne");
+			var sPasswordTwo = this.getViewModelProperty("viewModel", "/passwordTwo");
+
+			// Verify the password matches
+			if (sPasswordOne !== sPasswordTwo) {
+				MessageBox.error(this.getTranslation("signUpViewPasswordMatchesErrorMessage"));
+			} else {
+
+				var fnSignUpCallbackSuccess = function () {
+					debugger;
+				};
+
+				var fnSignUpCallbackError = function (oError) {
+					MessageBox.error(oError.message);
+				};
+
+				FirebaseService.getInstance()
+					.createUserWithEmailAndPassword(sEmail, sPasswordOne)
+					.then(fnSignUpCallbackSuccess.bind(this))
+					.catch(fnSignUpCallbackError.bind(this));
+			}
+		},
+
+		/**
+		 * Enable/Disable signIn button
+		 * 
+		 * @private
+		 */
+		isValidForm: function (sUsername, sEmail, sPasswordOne, sPasswordTwo) {
+			if (!sUsername || !sPasswordOne || !sPasswordTwo) {
+				return false;
+			}
+			if (!Utility.isValidEmail(sEmail)) {
+				return false;
+			}
+			return true;
+		},
+
 		///////////////////////////////////////////////////////////////////////
 		//	PRIVATE METHOD
 		///////////////////////////////////////////////////////////////////////
@@ -86,15 +149,24 @@ sap.ui.define([
 		 * @private
 		 */
 		__createModel: function () {
-			var viewModel = new JSONModel();
-			this.setViewModel(viewModel, "viewModel");
+			this.setViewModel(new JSONModel({
+				"username": "",
+				"email": "",
+				"passwordOne": "",
+				"passwordTwo": ""
+					// "messageStripText": "",
+					// "showMessageStrip": false
+			}), "viewModel");
 		},
 
 		/**
-		 * init view controls binding  
+		 * Init view controls binding
+		 * 
 		 * @private
 		 */
-		__setBindingForView: function () {}
+		__setBindingForView: function () {
+
+		}
 
 	});
 
