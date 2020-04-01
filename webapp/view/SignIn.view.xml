@@ -17,7 +17,7 @@
 			fitContainer="true">
 			
 				<VBox 
-					width="24rem"
+					width="25rem"
 					id="SignIn-Form">
 			
 					<VBox class="sapUiMediumMargin">
@@ -63,7 +63,6 @@
 										text="{i18n>signInViewFormInputPawword}" 
 										labelFor="SignIn-SimpleForm-Input-Password" />
 									
-									<VBox>
 										<Input 
 											type="Password" 
 											maxLength="100"
@@ -71,23 +70,27 @@
 											value ="{viewModel>/password}"
 											id="SignIn-SimpleForm-Input-Password" 
 											placeholder="{i18n>signInViewFormInputPawword}" />
-											
-										<Button 
-												width="100%"
-												type="Default"
-												class="sapUiMediumMarginTop"
-												press="onSignInButtonPress" 
-												icon="sap-icon://person-placeholder" 
-												text="{i18n>signInViewFormSignInButton}" 
-												enabled="{ parts: [ { path: 'viewModel>/email' },  
-																	{ path: 'viewModel>/password' } ], 
-															formatter: '.isValidForm' }" />
-									</VBox>
 									
 								</form:content>
 							</form:SimpleForm>
 						</VBox>
-							
+						
+						<form:SimpleForm id="SignIn-SimpleForm-Submit">
+							<form:content>
+
+								<Button 
+										width="100%"
+										type="Default"
+										press="onSignInButtonPress" 
+										icon="sap-icon://person-placeholder" 
+										text="{i18n>signInViewFormSignInButton}" 
+										enabled="{ parts: [ { path: 'viewModel>/email' },  
+															{ path: 'viewModel>/password' } ], 
+													formatter: '.isValidForm' }" />
+								
+							</form:content>
+						</form:SimpleForm>
+						
 						<VBox class="text-center sapUiTinyMarginTop">
 							<Link 
 								id="linkPwForget" 

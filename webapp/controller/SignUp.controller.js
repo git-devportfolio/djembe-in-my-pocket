@@ -69,7 +69,7 @@ sap.ui.define([
 		 * @memberOf djembe.in.my.pocket.view.SignUp
 		 */
 		onAfterRendering: function () {
-			this.byId("SignUp-Form").$().css("background-color", Theming.get("sapUiFieldBackground"));
+			// this.byId("SignUp-Form").$().css("background-color", Theming.get("sapUiFieldBackground"));
 		},
 
 		/**

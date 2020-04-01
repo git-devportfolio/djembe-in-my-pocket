@@ -1,5 +1,11 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="djembe.in.my.pocket.controller.SignUp"
-	xmlns:html="http://www.w3.org/1999/xhtml">
+<mvc:View 
+	xmlns="sap.m" 
+	xmlns:core="sap.ui.core" 
+	xmlns:mvc="sap.ui.core.mvc" 
+	xmlns:form="sap.ui.layout.form"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	controllerName="djembe.in.my.pocket.controller.SignUp">
+	
 	<Page 
 		title="Sign Up" 
 		enableScrolling="false" 
@@ -12,9 +18,8 @@
 			fitContainer="true">
 			
 			<VBox 
-				width="22rem"
-				id="SignUp-Form" 
-				class="rounded sapUiTinyMargin shadow-sm">
+				width="25rem"
+				id="SignUp-Form">
 				
 				<VBox class="sapUiMediumMargin">
 					
@@ -22,94 +27,111 @@
 						<Title 
 							text="{i18n>signUpViewFormTitle}" 
 							titleStyle="H1"/>
-					</VBox>
-					
-					<VBox class="text-center sapUiContentPadding sapUiTinyMarginTop">
-						<Label 
-							text="{i18n>signUpViewFormSubTitle}" 
-							design="Bold" 
-							class="sapUiSmallMarginBottom" />
-					</VBox>
-					
-					<VBox class="sapUiTinyMarginBottom">
-						<Input 
-							type="Text" 
-							valueLiveUpdate="true"
-							value="{viewModel>/username}"
-							placeholder="{i18n>signUpViewFormInputUserName}" />
-					</VBox>
-					
-					<VBox class="sapUiTinyMarginBottom">
-						<Input 
-							type="Email" 
-							valueLiveUpdate="true"
-							value="{viewModel>/email}"
-							placeholder="{i18n>signUpViewFormInputEmail}"
-							valueStateText="{i18n>signInViewEmailFormatErrorMessage}"
-							valueState="{ parts: [ { path: 'viewModel>/email' } ], 
-											formatter: '.formatter.formatEmailValueState' }" />
-					</VBox>
-					
-					<VBox class="sapUiTinyMarginBottom">
-						<Input 
-							type="Password" 
-							valueLiveUpdate="true"
-							value="{viewModel>/passwordOne}"
-							placeholder="{i18n>signUpViewFormInputPassOne}" />
-					</VBox>
-					
-					<VBox class="sapUiTinyMarginBottom">
-						<Input 
-							type="Password" 
-							valueLiveUpdate="true"
-							value="{viewModel>/passwordTwo}"
-							placeholder="{i18n>signUpViewFormInputPassTwo}" />
-					</VBox>
-					
-					<VBox class="sapUiSmallMarginBottom">
-						<Button 
-							width="100%"
-							type="Accept"
-							text="{i18n>signUpViewFormSignUpButton}" 
-							press="onSignUpButtonWithEmailAndPassword"
-							enabled="{ parts: [ { path: 'viewModel>/username'	 },
-												{ path: 'viewModel>/email'		 },
-												{ path: 'viewModel>/passwordOne' },
-												{ path: 'viewModel>/passwordTwo' } ], 
-										formatter: '.isValidForm' }" />
-					</VBox>
-					
-					<VBox class="text-center sapUiSmallMarginBottom">
-						<Label text="{i18n>signUpViewFormOr}" />
-					</VBox>
-					
-					<VBox>
-						<Button 
-							width="100%" 
-							type="Default" 
-							icon="assets/img/google-sign-in.svg"
-							text="{i18n>signUpViewFormGoogleSignInButton}" 
-							class="btn-google-sign-in sapUiTinyMarginBottom" />
 							
-						<Button 
-							width="100%" 
-							type="Default" 
-							class="btn-facebook-sign-in"
-							icon="assets/img/facebook-sign-in.svg" 
-							text="{i18n>signUpViewFormFacebookSignInButton}" />
+						<Title 
+							titleStyle="H3"
+							class="sapUiSmallMarginTop"
+							text="{i18n>signInViewFormSubTitle}" />
 					</VBox>
 					
 					<VBox class="text-center sapUiMediumMarginTop">
 						<Label 
-							design="Bold" 
-							class="sapUiSmallMarginBottom" 
 							text="{i18n>signUpViewFormSignInLabel}" />
+							
 						<Link 
 							id="linkSignIn" 
 							press="onLinkSignInPress" 
+							class="sapUiTinyMarginTop"
 							text="{i18n>signUpViewFormSignInLink}" /> 
 					</VBox>
 					
+					<VBox class="sapUiSmallMarginBottom">
+						<form:SimpleForm id="SignIn-SimpleForm-Email">
+							<form:content>
+								
+								<Label 
+									text="{i18n>signUpViewFormInputEmail}" 
+									labelFor="SignUp-SimpleForm-Input-Email" />
+										
+								<Input 
+									type="Email" 
+									valueLiveUpdate="true"
+									value="{viewModel>/email}"
+									id="SignUp-SimpleForm-Input-Email"
+									placeholder="{i18n>signUpViewFormInputEmail}" />
+								
+								<Label 
+									text="{i18n>signUpViewFormInputPassOne}" 
+									labelFor="SignUp-SimpleForm-Input-Password-One" />
+								
+								<Input 
+									type="Password" 
+									valueLiveUpdate="true"
+									value="{viewModel>/passwordOne}"
+									id="SignUp-SimpleForm-Input-Password-One"
+									placeholder="{i18n>signUpViewFormInputPassOne}" />
+								
+								<Label 
+									text="{i18n>signUpViewFormInputPassTwo}" 
+									labelFor="SignUp-SimpleForm-Input-Password-Two" />
+										
+								<VBox>
+									
+									<Input 
+										type="Password" 
+										valueLiveUpdate="true"
+										value="{viewModel>/passwordTwo}"
+										id="SignUp-SimpleForm-Input-Password-Two"
+										placeholder="{i18n>signUpViewFormInputPassTwo}" />
+								
+								</VBox>
+								
+							</form:content>
+						</form:SimpleForm>		
+					</VBox>
+					
+					<form:SimpleForm id="SignIn-SimpleForm-Submit">
+						<form:content>
+
+							<Button 
+								width="100%"
+								type="Default"
+								press="onSignUpButtonPress"
+								text="{i18n>signUpViewFormSignUpButton}" 
+								enabled="{ parts: [ { path: 'viewModel>/email'		 },
+													{ path: 'viewModel>/passwordOne' },
+													{ path: 'viewModel>/passwordTwo' } ], 
+											formatter: '.isValidForm' }" />
+											
+						</form:content>
+					</form:SimpleForm>
+						
+					<VBox class="text-center sapUiSmallMarginTop">
+						<Label text="{i18n>signUpViewFormOr}" />
+					</VBox>
+					
+					<form:SimpleForm id="SignIn-SimpleForm-Social">
+						<form:content>
+							
+							<VBox>
+								<Button 
+									width="100%" 
+									type="Default" 
+									icon="assets/img/google-sign-in.svg"
+									text="{i18n>signUpViewFormGoogleSignInButton}" 
+									class="btn-google-sign-in sapUiTinyMarginBottom" />
+								
+								<Button 
+									width="100%" 
+									type="Default" 
+									class="btn-facebook-sign-in"
+									icon="assets/img/facebook-sign-in.svg" 
+									text="{i18n>signUpViewFormFacebookSignInButton}" />
+							</VBox>
+							
+						</form:content>
+					</form:SimpleForm>
+				
 				</VBox>
 			</VBox>
 			

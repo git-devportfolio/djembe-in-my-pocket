@@ -75,13 +75,13 @@
 			},
 			"routes": [{
 				"name": "SignIn",
-				"pattern": "",
+				"pattern": "SignIn",
 				"target": [
 					"SignIn"
 				]
 			}, {
 				"name": "SignUp",
-				"pattern": "SignUp",
+				"pattern": "",
 				"target": [
 					"SignUp"
 				]
