@@ -10,7 +10,7 @@ sap.ui.define([
 ], function (Theming, BaseController, JSONModel, Constant, Utility, Formatter, FirebaseService, MessageBox) {
 	"use strict";
 
-	return BaseController.extend("djembe.in.my.pocket.controller.PwForget", {
+	return BaseController.extend("djembe.in.my.pocket.controller.Profile", {
 		///////////////////////////////////////////////////////////////////////
 		//	FORMATTER
 		///////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ sap.ui.define([
 		//	ATTRIBUTES
 		///////////////////////////////////////////////////////////////////////
 
-		__targetName: "PwForget",
+		__targetName: "Profile",
 
 		///////////////////////////////////////////////////////////////////////
 		//	LIFECYCLE EVENTS
@@ -35,9 +35,35 @@ sap.ui.define([
 		onInit: function () {
 			BaseController.prototype.onInit.apply(this, arguments);
 
+			sap.ui.getCore().getEventBus().subscribe(
+				Constant.EVENTS.CHANNEL_ID,
+				Constant.EVENTS.SIGN_OUT,
+				this.onSignOutEventHandler,
+				this
+			);
+			
 			this.__createModel();
 		},
+		
+		/** 
+		 * Event to initialize this UI5 Control. Call the backend 
+		 * service and update view with data model.
+		 * 
+		 * @param sChanel string channel name
+		 * @param sEvent  string event name
+		 * @param oData	  object json data
+		 * @returns		  void
+		 */
+		onSignOutEventHandler: function (sChanel, sEvent, oData) {
+			if (sChanel !== Constant.EVENTS.CHANNEL_ID) {
+				return;
+			}
 
+			if (sEvent === Constant.EVENTS.SIGN_OUT) {
+				this.navTo(Constant.PAGES.SIGN_IN);
+			}
+		},
+		
 		/**
 		 * match a routing path
 		 * @public
@@ -49,7 +75,6 @@ sap.ui.define([
 
 			// 
 			this.__setBindingForView();
-			this.__setInputEmailFocus(350);
 		},
 
 		///////////////////////////////////////////////////////////////////////
@@ -61,8 +86,9 @@ sap.ui.define([
 		 * (NOT before the first rendering! onInit() is used for that one!).
 		 * @memberOf djembe.in.my.pocket.view.Login
 		 */
-		onBeforeRendering: function () {
-		},
+		//	onBeforeRendering: function() {
+		//
+		//	},
 
 		/**
 		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
@@ -70,9 +96,13 @@ sap.ui.define([
 		 * @memberOf djembe.in.my.pocket.view.Login
 		 */
 		onAfterRendering: function () {
-			// this.byId("SignIn-Form").$().css("background-color", Theming.get("sapUiFieldBackground"));
+			// this.byId("Account-Form-Email").$().css("color", Theming.get("sapUiContentDisabledTextColor"));
 		},
 
+		onSignOutButtonPress: function() {
+			FirebaseService.getInstance().signOut();	
+		},
+		
 		/**
 		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
 		 * @memberOf djembe.in.my.pocket.view.Login
@@ -87,107 +117,58 @@ sap.ui.define([
 		 * @public
 		 * @param {object} oEvent UI5 event
 		 */
-		onLinkSignInPress: function (oEvent) {
-			this.navTo(Constant.PAGES.SIGN_IN);
-		},
+		// onLinkSignUpPress: function (oEvent) {
+		// 	this.navTo(Constant.PAGES.SIGN_UP);
+		// },
 
 		/**
-		 * Show email valueStateText on focus out  
+		 * Nav to reset password view
 		 * 
 		 * @public
 		 * @param {object} oEvent UI5 event
 		 */
-		onInputEmailChange: function (oEvent) {
-			this.setViewModelProperty("viewModel", "/emailFocusOut", true);
-		},
-		
+		// onLinkPwForgetPress: function (oEvent) {
+		// 	this.navTo(Constant.PAGES.PW_FORGET);
+		// },
+
 		/**
-		 * Allows existing users to reset password using their email address 
+		 * Allows existing users to sign in using their email address and password
 		 * 
 		 * @public
 		 * @param {event} oEvent UI5 event
 		 */
-		onPwForgetButtonPress: function (oEvent) {
-			var sEmail = this.getViewModelProperty("viewModel", "/email");
-			var sCustomButtonText = this.getTranslation("signUpViewFormSignInLink");
+		// onSignInButtonPress: function (oEvent) {
+		// 	var oModel = this.getViewModel("viewModel");
+		// 	var oData = oModel.getData(); 
 
-			var fnSendEmailCallbackSuccess = function () {
-				MessageBox.information(this.getTranslation("pwForgetViewSendEmailConfirmationMessage"), {
-					id: "Send-Password-Reset-Message",
-					actions: [sCustomButtonText],
-					onClose: function (oAction) {
-						this.navTo(Constant.PAGES.SIGN_IN, {
-							email: sEmail
-						});
-					}.bind(this)
-				});
-			};
+		// 	var fnSignInCallbackSuccess = function () {
+		// 		var sEmail = oData.email.toLowerCase();
+		// 	};
 
-			var fnSendEmailCallbackError = function (oError) {
+		// 	var fnSignInCallbackError = function (oError) {
+		// 		MessageBox.error(oError.message /* this.getTranslation("signInViewAuthenticationErrorMessage") */ );
+		// 	};
 
-				switch (oError.code) {
-
-				case Constant.AUTH_ERRORS.INVALID_EMAIL: // INVALID EMAIL
-
-					MessageBox.warning(this.getTranslation(oError.code), {
-						onClose: function (oAction) {
-							this.__setInputEmailFocus(100);
-						}.bind(this)
-					});
-					break;
-
-				case Constant.AUTH_ERRORS.USER_NOT_FOUND: // NO ACCOUNT
-
-					MessageBox.warning(this.getTranslation(oError.code), {
-						id: "Warning-User-Not-Found",
-						actions: [MessageBox.Action.YES, MessageBox.Action.NO],
-						initialFocus: MessageBox.Action.NO,
-						onClose: function (oAction) {
-							if (oAction === MessageBox.Action.YES) {
-								this.navTo(Constant.PAGES.SIGN_UP, {
-									email: sEmail
-								});
-							} else {
-								this.__setInputEmailFocus(100);
-							}
-						}.bind(this)
-					});
-					break;
-
-				default:
-					MessageBox.warning(oError.message);
-
-				}
-			};
-
-			FirebaseService.getInstance()
-				.sendPasswordResetEmail(sEmail)
-				.then(fnSendEmailCallbackSuccess.bind(this))
-				.catch(fnSendEmailCallbackError.bind(this));
-		},
-
-		///////////////////////////////////////////////////////////////////////
-		//	PUBLIC METHOD
-		///////////////////////////////////////////////////////////////////////
+		// 	FirebaseService.getInstance()
+		// 		.signInWithEmailAndPassword(oData.email, oData.password)
+		// 		.then(fnSignInCallbackSuccess.bind(this))
+		// 		.catch(fnSignInCallbackError.bind(this));
+		// },
 
 		/**
 		 * Enable/Disable signIn button
 		 * 
 		 * @public
 		 */
-		isValidForm: function (sEmail) {
-			if (!Utility.isValidEmail(sEmail)) {
-				return false;
-			}
-			return true;
-		},
-
-		/**
-		 * @public
-		 */
-		getInputEmail: function () {
-			return this.byId("PwForget-SimpleForm-Input-Email");
-		},
+		// isValidForm: function (sEmail, sPassword) {
+		// 	if (!Utility.isValidEmail(sEmail)) {
+		// 		return false;
+		// 	}
+		// 	if (!sPassword) {
+		// 		return false;
+		// 	}
+		// 	return true;
+		// },
 
 		///////////////////////////////////////////////////////////////////////
 		//	PRIVATE METHOD
@@ -199,8 +180,13 @@ sap.ui.define([
 		 */
 		__createModel: function () {
 			this.setViewModel(new JSONModel({
+				"uid": "",
 				"email": "",
-				"emailFocusOut": false
+				"photoURL": "",
+				"displayName": "",
+				"isAnonymous": "",
+				"providerData": "",
+				"emailVerified": ""
 			}), "viewModel");
 		},
 
@@ -210,23 +196,15 @@ sap.ui.define([
 		 * @private
 		 */
 		__setBindingForView: function () {
-			this.__resetForm();
-		},
+			var oUser = FirebaseService.getInstance().getUser();
 
-		/**
-		 * @private
-		 */
-		__resetForm: function () {
-			this.setViewModelProperty("viewModel", "/email", "");
-		},
-
-		/**
-		 * @private
-		 */
-		__setInputEmailFocus: function (iDelay) {
-			jQuery.sap.delayedCall(iDelay, this, function () {
-				this.getInputEmail().focus();
-			});
+			this.setViewModelProperty("viewModel", "/uid", oUser.uid);
+			this.setViewModelProperty("viewModel", "/email", oUser.email);
+			this.setViewModelProperty("viewModel", "/photoURL", oUser.photoURL);
+			this.setViewModelProperty("viewModel", "/displayName", oUser.displayName);
+			this.setViewModelProperty("viewModel", "/isAnonymous", oUser.isAnonymous);
+			this.setViewModelProperty("viewModel", "/providerData", oUser.providerData);
+			this.setViewModelProperty("viewModel", "/emailVerified", oUser.emailVerified);
 		}
 	});
 

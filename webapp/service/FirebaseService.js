@@ -3,8 +3,9 @@ sap.ui.define([
 	"sap/ui/base/Object",
 	"sap/base/Log",
 	"djembe/in/my/pocket/util/Loader",
-	"djembe/in/my/pocket/util/Utility"
-], function (Object, Log, Loader, Utility) {
+	"djembe/in/my/pocket/util/Utility",
+	"djembe/in/my/pocket/util/Constant"
+], function (Object, Log, Loader, Utility, Constant) {
 	"use strict";
 
 	var _oInstance = null;
@@ -21,11 +22,15 @@ sap.ui.define([
 	 */
 	var FirebaseService = Object.extend("djembe.in.my.pocket.service.FirebaseService", {
 
+		__oUser: null,
+
 		////////////////////////////////////////////////////////////
 		//	CONSTRUCTOR
 		////////////////////////////////////////////////////////////
 
-		constructor: function () {},
+		constructor: function () {
+			Loader.getInstance().open();
+		},
 
 		////////////////////////////////////////////////////////////
 		//	METHODS
@@ -39,7 +44,7 @@ sap.ui.define([
 		initializeApp: function (mConfig) {
 			if (mConfig) {
 				firebase.initializeApp(mConfig);
-				// firebase.auth().onAuthStateChanged(this.onAuthStateChanged.bind(this));
+				firebase.auth().onAuthStateChanged(this.onAuthStateChanged.bind(this));
 			}
 		},
 
@@ -72,12 +77,29 @@ sap.ui.define([
 		/**
 		 * Set an authentication state observer and get user data
 		 * 
+		 * By using an observer, you ensure that the Auth object isn't in an 
+		 * intermediate state—such as initialization—when you get the current 
+		 * user. When you use signInWithRedirect, the onAuthStateChanged 
+		 * observer waits until getRedirectResult resolves before triggering.
+		 * 
 		 * @param {object} oUser get information about the user in the observer
 		 * @public
 		 */
 		onAuthStateChanged: function (oUser) {
+			
+			Loader.getInstance().close();
+			
 			if (oUser) {
+				
+				sap.ui.getCore().getEventBus().publish(
+					Constant.EVENTS.CHANNEL_ID,
+					Constant.EVENTS.SIGN_IN,
+					oUser
+				);
+				
 				// User is signed in.
+				this.__oUser = oUser;
+
 				// var displayName = oUser.displayName;
 				// var email = oUser.email;
 				// var emailVerified = oUser.emailVerified;
@@ -86,10 +108,40 @@ sap.ui.define([
 				// var uid = oUser.uid;
 				// var providerData = oUser.providerData;
 				// ...
+
 			} else {
+
 				// User is signed out.
-				// ...
+				this.__oUser = null;
+
+				// sap.ui.getCore().getEventBus().publish(
+				// 	Constant.EVENTS.CHANNEL_ID,
+				// 	Constant.EVENTS.SIGN_OUT
+				// );
 			}
+		},
+
+		/**
+		 * Get User profile information
+		 * 
+		 * @param {} 
+		 * @ return {User}
+		 * @public
+		 */
+		getUser: function () {
+			return this.__oUser;
+		},
+
+		/**
+		 * Get the currently signed-in user by using the currentUser property. 
+		 * If a user isn't signed in, currentUser is null.
+		 * 
+		 * @param {} 
+		 * @ return {User}
+		 * @public
+		 */
+		getCurrentUser: function () {
+			return firebase.aut().currentUser;
 		},
 
 		/**
@@ -101,7 +153,10 @@ sap.ui.define([
 		 * @public
 		 */
 		createUserWithEmailAndPassword: function (sEmail, sPassword) {
-			return firebase.auth().createUserWithEmailAndPassword(sEmail, sPassword);
+			this.onRequestSent();
+			return firebase.auth()
+				.createUserWithEmailAndPassword(sEmail, sPassword)
+				.finally(this.onRequestCompleted.bind(this));
 		},
 
 		/**
@@ -117,7 +172,70 @@ sap.ui.define([
 			return firebase.auth()
 				.signInWithEmailAndPassword(sEmail, sPassword)
 				.finally(this.onRequestCompleted.bind(this));
+		},
+
+		/**
+		 * Sign in by redirecting to the sign-in Google page
+		 * 
+		 * @returns {void} 
+		 * 
+		 * @see https://firebase.google.com/docs/auth/web/google-signin?authuser=0
+		 * @public
+		 */
+		signInWithGoogleAccount: function () {
+			var oProvider = new firebase.auth.GoogleAuthProvider();
+			firebase.auth().signInWithRedirect(oProvider);
+		},
+
+		/**
+		 * Sign in by redirecting to the sign-in Facebook page
+		 * 
+		 * @returns {void} 
+		 * 
+		 * @see https://firebase.google.com/docs/auth/web/facebook-login
+		 * @public
+		 */
+		 
+		signInWithFacebookAccount: function() {
+			var oProvider = new firebase.auth.FacebookAuthProvider();
+			firebase.auth().signInWithRedirect(oProvider);
+		},
+		
+		/**
+		 * Gets the list of possible sign in methods for the given email address
+		 * 
+		 * @returns {promise}
+		 * 
+		 * @see https://firebase.google.com/docs/reference/js/firebase.auth.Auth?authuser=1#fetchsigninmethodsforemail
+		 * @public
+		 */
+		fetchSignInMethodsForEmail: function (sEmail) {
+			return firebase.auth().fetchSignInMethodsForEmail(sEmail);
+		},
+
+		/**
+		 * Allows existing users to reset password using their email address 
+		 * 
+		 * @returns {promise}
+		 * 
+		 * @see https://firebase.google.com/docs/auth/web/manage-users#send_a_password_reset_email
+		 * @public
+		 */
+		sendPasswordResetEmail: function (sEmail) {
+			return firebase.auth().sendPasswordResetEmail(sEmail);
+		},
+		
+		/**
+		 * To sign out a user
+		 * 
+		 * @returns {void} 
+		 * 
+		 * @public
+		 */
+		signOut: function () {
+			firebase.auth().signOut();
 		}
+
 	});
 
 	return {

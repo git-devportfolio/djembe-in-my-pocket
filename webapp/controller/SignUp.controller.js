@@ -47,7 +47,8 @@ sap.ui.define([
 		onRouteMatched: function (oEvent, routeName) {
 			BaseController.prototype.onRouteMatched.apply(this, arguments); // Initialize Firebase if not
 
-			this.__setBindingForView();
+			// Update view model
+			this.__setBindingForView(oEvent);
 		},
 
 		///////////////////////////////////////////////////////////////////////
@@ -59,9 +60,7 @@ sap.ui.define([
 		 * (NOT before the first rendering! onInit() is used for that one!).
 		 * @memberOf djembe.in.my.pocket.view.SignUp
 		 */
-		//	onBeforeRendering: function() {
-		//
-		//	},
+		onBeforeRendering: function () {},
 
 		/**
 		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
@@ -87,7 +86,17 @@ sap.ui.define([
 		 * @param {object} oEvent UI5 event
 		 */
 		onLinkSignInPress: function (oEvent) {
-			this.navTo("SignIn");
+			this.navTo(Constant.PAGES.SIGN_IN);
+		},
+
+		/**
+		 * Show email valueStateText on focus out  
+		 * 
+		 * @public
+		 * @param {object} oEvent UI5 event
+		 */
+		onInputEmailChange: function (oEvent) {
+			this.setViewModelProperty("viewModel", "/emailFocusOut", true);
 		},
 
 		/**
@@ -96,30 +105,74 @@ sap.ui.define([
 		 * @public
 		 * @param {event} oEvent UI5 event
 		 */
-		onSignUpButtonWithEmailAndPassword: function (oEvent) {
-			
-			return;
-			
-			var sUsername = this.getViewModelProperty("viewModel", "/username");
-			var sEmail = this.getViewModelProperty("viewModel", "/email");
-			var sPasswordOne = this.getViewModelProperty("viewModel", "/passwordOne");
-			var sPasswordTwo = this.getViewModelProperty("viewModel", "/passwordTwo");
+		onSignUpButtonPress: function (oEvent) {
+			var oModel = this.getViewModel("viewModel");
+			var oData = oModel.getData();
 
-			// Verify the password matches
-			if (sPasswordOne !== sPasswordTwo) {
-				MessageBox.error(this.getTranslation("signUpViewPasswordMatchesErrorMessage"));
-			} else {
+			var fnSignUpCallbackSuccess = function (oUserCredential) {
+				var oUser = oUserCredential.user;
+				var sMessage = this.getTranslation("signUpViewVerifyEmailMessage");
 
-				var fnSignUpCallbackSuccess = function () {
-					debugger;
-				};
+				if (oUser && oUser.emailVerified === false) {
+					oUser.sendEmailVerification().then(function () {
+						MessageBox.success(sMessage);
+					});
+				}
+			};
 
-				var fnSignUpCallbackError = function (oError) {
-					MessageBox.error(oError.message);
-				};
+			var fnSignUpCallbackError = function (oError) {
+
+				switch (oError.code) {
+
+				case Constant.AUTH_ERRORS.EMAIL_ALREADY_IN_USE:
+
+					MessageBox.warning(this.getTranslation(oError.code), {
+						id: "MessageBox-Email-Already-Use",
+						actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+						initialFocus: MessageBox.Action.NO,
+						onClose: function (oAction) {
+							if (oAction === MessageBox.Action.YES) {
+								this.navTo(Constant.PAGES.SIGN_IN);
+							} else {
+								this.__setInputEmailFocus(100);
+								this.setViewModelProperty("viewModel", "/emailFocusOut", false);
+							}
+						}.bind(this)
+					});
+					break;
+
+				case Constant.AUTH_ERRORS.OPERATION_NOT_ALLOWED:
+
+					MessageBox.warning(this.getTranslation(oError.code), {
+						actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+						initialFocus: MessageBox.Action.NO,
+						onClose: function (oAction) {
+							if (oAction === MessageBox.Action.YES) {
+								this.navTo(Constant.PAGES.SIGN_UP);
+							} else {
+								this.__setInputEmailFocus(100);
+								this.setViewModelProperty("viewModel", "/emailFocusOut", false);
+							}
+						}.bind(this)
+					});
+					break;
+
+				default:
+				case Constant.AUTH_ERRORS.WEAK_PASSWORD:
+
+					MessageBox.warning(this.getTranslation(oError.code), {
+						onClose: function (oAction) {
+							this.__setInputPasswordOneFocus(100);
+						}.bind(this)
+					});
+					break;
+				}
+			};
+
+			if (this.isValidForm(oData.email, oData.passwordOne, oData.passwordTwo)) {
 
 				FirebaseService.getInstance()
-					.createUserWithEmailAndPassword(sEmail, sPasswordOne)
+					.createUserWithEmailAndPassword(oData.email, oData.passwordOne)
 					.then(fnSignUpCallbackSuccess.bind(this))
 					.catch(fnSignUpCallbackError.bind(this));
 			}
@@ -128,16 +181,33 @@ sap.ui.define([
 		/**
 		 * Enable/Disable signIn button
 		 * 
-		 * @private
+		 * @public
 		 */
-		isValidForm: function (sUsername, sEmail, sPasswordOne, sPasswordTwo) {
-			if (!sUsername || !sPasswordOne || !sPasswordTwo) {
+		isValidForm: function (sEmail, sPasswordOne, sPasswordTwo) {
+			if (!sEmail || !sPasswordOne || !sPasswordTwo) {
+				return false;
+			}
+			if (sPasswordOne !== sPasswordTwo) {
 				return false;
 			}
 			if (!Utility.isValidEmail(sEmail)) {
 				return false;
 			}
 			return true;
+		},
+
+		/**
+		 * @public
+		 */
+		getInputEmail: function () {
+			return this.byId("SignUp-SimpleForm-Input-Email");
+		},
+
+		/**
+		 * @public
+		 */
+		getInputPasswordOne: function () {
+			return this.byId("SignUp-SimpleForm-Input-Password-One");
 		},
 
 		///////////////////////////////////////////////////////////////////////
@@ -153,9 +223,8 @@ sap.ui.define([
 				"username": "",
 				"email": "",
 				"passwordOne": "",
-				"passwordTwo": ""
-					// "messageStripText": "",
-					// "showMessageStrip": false
+				"passwordTwo": "",
+				"emailFocusOut": false
 			}), "viewModel");
 		},
 
@@ -164,8 +233,45 @@ sap.ui.define([
 		 * 
 		 * @private
 		 */
-		__setBindingForView: function () {
+		__setBindingForView: function (oEvent) {
+			var oArgs = oEvent.getParameter("arguments");
 
+			this.__resetForm();
+
+			if (oArgs.email) { // 
+				this.__setInputPasswordOneFocus(350);
+				this.setViewModelProperty("viewModel", "/email", oArgs.email);
+			}
+			else {
+				this.__setInputEmailFocus(350);
+			}
+		},
+
+		/**
+		 * @private
+		 */
+		__resetForm: function () {
+			this.setViewModelProperty("viewModel", "/email", "");
+			this.setViewModelProperty("viewModel", "/passwordOne", "");
+			this.setViewModelProperty("viewModel", "/passwordTwo", "");
+		},
+
+		/**
+		 * @private
+		 */
+		__setInputEmailFocus: function (iDelay) {
+			jQuery.sap.delayedCall(iDelay, this, function () {
+				this.getInputEmail().focus();
+			});
+		},
+
+		/**
+		 * @private
+		 */
+		__setInputPasswordOneFocus: function (iDelay) {
+			jQuery.sap.delayedCall(iDelay, this, function () {
+				this.getInputPasswordOne().focus();
+			});
 		}
 
 	});

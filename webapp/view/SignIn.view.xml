@@ -7,9 +7,10 @@
 	controllerName="djembe.in.my.pocket.controller.SignIn">
 	
 	<Page 
-		title="Sign In" 
-		enableScrolling="false" 
-		showHeader="false">
+		id="SignIn-Page"
+		showHeader="false"
+		title="Sign In Page" 
+		enableScrolling="false">
 		
 		<VBox 
 			alignItems="Center" 
@@ -37,7 +38,8 @@
 							<Label 
 								text="{i18n>signInViewFormSignUpLabel}" />
 								
-							<Link 
+							<Link
+								id="SignIn-SignUp-Link"
 								press="onLinkSignUpPress"
 								class="sapUiTinyMarginTop"
 								text="{i18n>signInViewFormSignUpLink}" />
@@ -56,9 +58,16 @@
 											maxLength="100"
 											valueLiveUpdate="true"
 											value ="{viewModel>/email}"
+											change="onInputEmailChange"
+											submit="onSignInButtonPress"
+											showValueStateMessage="true"
 											id="SignIn-SimpleForm-Input-Email" 
-											placeholder="{i18n>signInViewFormInputEmail}" />
-									
+											valueStateText="{i18n>auth/invalid-email}"
+											placeholder="{i18n>signInViewFormInputEmail}" 
+											valueState="{ parts: [ { path: 'viewModel>/email' },
+																   { path: 'viewModel>/emailFocusOut' } ], 
+															formatter: '.formatter.formatEmailInputValueState' }" />
+
 									<Label 
 										text="{i18n>signInViewFormInputPawword}" 
 										labelFor="SignIn-SimpleForm-Input-Password" />
@@ -67,6 +76,7 @@
 											type="Password" 
 											maxLength="100"
 											valueLiveUpdate="true"
+											submit="onSignInButtonPress"
 											value ="{viewModel>/password}"
 											id="SignIn-SimpleForm-Input-Password" 
 											placeholder="{i18n>signInViewFormInputPawword}" />
@@ -79,21 +89,22 @@
 							<form:content>
 
 								<Button 
-										width="100%"
-										type="Default"
-										press="onSignInButtonPress" 
-										icon="sap-icon://person-placeholder" 
-										text="{i18n>signInViewFormSignInButton}" 
-										enabled="{ parts: [ { path: 'viewModel>/email' },  
-															{ path: 'viewModel>/password' } ], 
-													formatter: '.isValidForm' }" />
+									width="100%"
+									type="Default"
+									id="SignIn-Submit-Button"
+									press="onSignInButtonPress" 
+									icon="sap-icon://person-placeholder" 
+									text="{i18n>signInViewFormSignInButton}" 
+									enabled="{ parts: [ { path: 'viewModel>/email' },  
+														{ path: 'viewModel>/password' } ], 
+												formatter: '.isValidForm' }" />
 								
 							</form:content>
 						</form:SimpleForm>
 						
 						<VBox class="text-center sapUiTinyMarginTop">
 							<Link 
-								id="linkPwForget" 
+								id="SignIn-PwForget-Link" 
 								press="onLinkPwForgetPress"
 								text="{i18n>signInViewFormPwForgetLink}" />
 						</VBox>
@@ -109,17 +120,21 @@
 									
 									<VBox>
 										<Button 
-											type="Default" 
 											width="100%"
+											type="Default"
+											press="onGoogleSignInPress"
+											id="SignIn-Google-SignIn-Button"
 											icon="assets/img/google-sign-in.svg"
 											text="{i18n>signInViewFormGoogleSignInButton}" 
 											class="btn-google-sign-in"/>
 										
 										<Button 
-											type="Default" 
 											width="100%" 
-											class="btn-facebook-sign-in  sapUiTinyMarginTop"
+											type="Default" 
+											press="onFacebookSignInPress"
+											id="SignIn-Facebook-SignIn-Button"
 											icon="assets/img/facebook-sign-in.svg"
+											class="btn-facebook-sign-in  sapUiTinyMarginTop"
 											text="{i18n>signInViewFormFacebookSignInButton}" />	
 									</VBox>
 									

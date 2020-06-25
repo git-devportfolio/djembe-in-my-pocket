@@ -2,13 +2,15 @@
 
 	sap.ui.define([
 		"sap/ui/test/opaQunit",
+		"djembe/in/my/pocket/test/integration/Server",
 		"./pages/App"
-	], function (opaTest) {
+	], function (opaTest, Server) {
 		"use strict";
 
 		QUnit.module("Navigation Journey");
 
 		opaTest("Should see the initial page of the app", function (Given, When, Then) {
+
 			// Arrangements
 			Given.iStartMyApp();
 

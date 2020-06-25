@@ -1,11 +1,8 @@
 
-1er commit :
-TODO : Charger les fichiers audio
-1er squelette de l'application :
-- Création des répertoires de travail
-- Readme
-- BaseController
-- assets : Logos et fichiers audio
+Ctrl + Alt + G => Go to definition
+Ctrl + Alt + j => JsDoc generation
+Ctrl + Shift + R => Open Resources
+Alt + F5 => Run
 
 # DJEMBE IN MY POCKET
 

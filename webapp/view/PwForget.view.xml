@@ -1,27 +1,96 @@
-<mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" controllerName="djembe.in.my.pocket.controller.PwForget"
-	xmlns:html="http://www.w3.org/1999/xhtml">
-	<Page title="PwForget" enableScrolling="false" showHeader="false">
-		<VBox width="auto" alignItems="Center" justifyContent="Center" fitContainer="true">
-			<VBox id="PwForget-Form" class="rounded sapUiTinyMargin shadow-sm" width="22rem">
+<mvc:View 
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core" 
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:form="sap.ui.layout.form"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	controllerName="djembe.in.my.pocket.controller.PwForget">
+	
+	<Page 
+		id="PwForget-Page"
+		showHeader="false"
+		enableScrolling="false">
+		
+		<VBox 
+			width="auto" 
+			alignItems="Center" 
+			fitContainer="true"
+			justifyContent="Center">
+			
+			<VBox 
+				width="26rem"
+				id="PwForget-Form">
+				
 				<VBox class="sapUiMediumMargin">
+					
 					<VBox class="text-center">
-						<Title text="Mot de passe ?" titleStyle="H1"/>
+						<Title 
+							titleStyle="H1"
+							text="{i18n>pwForgetViewFormTitle}" />
+							
+						<Title 
+							titleStyle="H3"
+							class="sapUiSmallMarginTop"
+							text="{i18n>pwForgetViewFormSubTitle}" />
 					</VBox>
-					<VBox class="text-center sapUiContentPadding sapUiTinyMarginTop sapUiSmallMarginBottom">
-						<Text text="Veuillez saisir votre adresse e-mail ?" textAlign="Center" />
+					
+					<VBox class="sapUiSmallMarginTop">
+						<form:SimpleForm id="PwForget-SimpleForm-Email">
+							<form:content>
+								
+								<Label 
+									text="{i18n>pwForgetViewFormInputEmail}" 
+									labelFor="PwForget-SimpleForm-Input-Email" />
+								
+								<Input 
+									type="Email" 
+									maxLength="100"
+									valueLiveUpdate="true"
+									value ="{viewModel>/email}"
+									change="onInputEmailChange"
+									submit="onPwForgetButtonPress"
+									showValueStateMessage="true"
+									id="PwForget-SimpleForm-Input-Email" 
+									valueStateText="{i18n>auth/invalid-email}"
+									placeholder="{i18n>signInViewFormInputEmail}" 
+									valueState="{ parts: [ { path: 'viewModel>/email' },
+														   { path: 'viewModel>/emailFocusOut' } ], 
+													formatter: '.formatter.formatEmailInputValueState' }" />
+							</form:content>
+						</form:SimpleForm>
 					</VBox>
-					<VBox class="sapUiTinyMarginBottom">
-						<Input type="Email" placeholder="Adresse email"/>
+					
+					<form:SimpleForm id="PwForget-SimpleForm-Submit">
+						<form:content>
+
+							<Button 
+									width="100%"
+									type="Default"
+									id="PwForget-Submit-Button"
+									press="onPwForgetButtonPress" 
+									text="{i18n>pwForgetViewFormPwForgetButton}"  
+									enabled="{ parts: [ { path: 'viewModel>/email' } ], 
+												formatter: '.isValidForm' }" />
+							
+						</form:content>
+					</form:SimpleForm>
+					
+					<VBox class="text-center sapUiMediumMarginTop">
+						<Label 
+							text="{i18n>pwForgetViewFormSignInLabel}" />
+							
+						<Link 
+							id="SignIn-PwForget-Link" 
+							press="onLinkSignInPress" 
+							class="sapUiTinyMarginTop"
+							text="{i18n>signUpViewFormSignInLink}" /> 
 					</VBox>
-					<VBox class="text-center sapUiLargeMarginBottom">
-						<Button text="Réinitialiser le mot de passe" type="Accept" width="100%" icon="sap-icon://email"/>
-					</VBox>
-					<VBox class="text-center">
-						<Label text="Vous avez déjà un compte ?" design="Bold" class="sapUiTinyMarginBottom"/>
-						<Link id="linkSignIn" text="Connectez-vous" press="onLinkSignInPress"/>
-					</VBox>
+					
 				</VBox>
+				
 			</VBox>
+			
 		</VBox>
+		
 	</Page>
 </mvc:View>

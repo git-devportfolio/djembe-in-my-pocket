@@ -75,13 +75,13 @@
 			},
 			"routes": [{
 				"name": "SignIn",
-				"pattern": "SignIn",
+				"pattern": "",
 				"target": [
 					"SignIn"
 				]
 			}, {
 				"name": "SignUp",
-				"pattern": "",
+				"pattern": "SignUp/:email:",
 				"target": [
 					"SignUp"
 				]
@@ -96,6 +96,18 @@
 				"pattern": "Exception",
 				"target": [
 					"Exception"
+				]
+			}, {
+				"name": "Profile",
+				"pattern": "Profile",
+				"target": [
+					"Profile"
+				]
+			}, {
+				"name": "RhythmList",
+				"pattern": "RhythmList",
+				"target": [
+					"RhythmList"
 				]
 			}],
 			"targets": {
@@ -114,6 +126,14 @@
 				"Exception": {
 					"viewType": "XML",
 					"viewName": "Exception"
+				},
+				"Profile": {
+					"viewType": "XML",
+					"viewName": "Profile"
+				},
+				"RhythmList": {
+					"viewType": "XML",
+					"viewName": "RhythmList"
 				}
 			}
 		},

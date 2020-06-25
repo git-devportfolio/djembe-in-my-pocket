@@ -10,7 +10,7 @@ sap.ui.define([
 ], function (Theming, BaseController, JSONModel, Constant, Utility, Formatter, FirebaseService, MessageBox) {
 	"use strict";
 
-	return BaseController.extend("djembe.in.my.pocket.controller.PwForget", {
+	return BaseController.extend("djembe.in.my.pocket.controller.RhythmList", {
 		///////////////////////////////////////////////////////////////////////
 		//	FORMATTER
 		///////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ sap.ui.define([
 		//	ATTRIBUTES
 		///////////////////////////////////////////////////////////////////////
 
-		__targetName: "PwForget",
+		__targetName: "RhythmList",
 
 		///////////////////////////////////////////////////////////////////////
 		//	LIFECYCLE EVENTS
@@ -33,7 +33,7 @@ sap.ui.define([
 		 * @memberOf com.lab.StepRhythm.view.Rhythms
 		 */
 		onInit: function () {
-			BaseController.prototype.onInit.apply(this, arguments);
+			BaseController.prototype.onInit.apply(this, arguments); // Initialize Firebase if not
 
 			this.__createModel();
 		},
@@ -47,9 +47,8 @@ sap.ui.define([
 		onRouteMatched: function (oEvent, routeName) {
 			BaseController.prototype.onRouteMatched.apply(this, arguments);
 
-			// 
+			// Update view model
 			this.__setBindingForView();
-			this.__setInputEmailFocus(350);
 		},
 
 		///////////////////////////////////////////////////////////////////////
@@ -61,8 +60,7 @@ sap.ui.define([
 		 * (NOT before the first rendering! onInit() is used for that one!).
 		 * @memberOf djembe.in.my.pocket.view.Login
 		 */
-		onBeforeRendering: function () {
-		},
+		onBeforeRendering: function () {},
 
 		/**
 		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
@@ -81,113 +79,14 @@ sap.ui.define([
 		//
 		//	}
 
-		/**
-		 * Nav to create account view
-		 * 
-		 * @public
-		 * @param {object} oEvent UI5 event
-		 */
-		onLinkSignInPress: function (oEvent) {
-			this.navTo(Constant.PAGES.SIGN_IN);
-		},
-
-		/**
-		 * Show email valueStateText on focus out  
-		 * 
-		 * @public
-		 * @param {object} oEvent UI5 event
-		 */
-		onInputEmailChange: function (oEvent) {
-			this.setViewModelProperty("viewModel", "/emailFocusOut", true);
+		onSignOutButtonPress: function() {
+			FirebaseService.getInstance().signOut();	
 		},
 		
-		/**
-		 * Allows existing users to reset password using their email address 
-		 * 
-		 * @public
-		 * @param {event} oEvent UI5 event
-		 */
-		onPwForgetButtonPress: function (oEvent) {
-			var sEmail = this.getViewModelProperty("viewModel", "/email");
-			var sCustomButtonText = this.getTranslation("signUpViewFormSignInLink");
-
-			var fnSendEmailCallbackSuccess = function () {
-				MessageBox.information(this.getTranslation("pwForgetViewSendEmailConfirmationMessage"), {
-					id: "Send-Password-Reset-Message",
-					actions: [sCustomButtonText],
-					onClose: function (oAction) {
-						this.navTo(Constant.PAGES.SIGN_IN, {
-							email: sEmail
-						});
-					}.bind(this)
-				});
-			};
-
-			var fnSendEmailCallbackError = function (oError) {
-
-				switch (oError.code) {
-
-				case Constant.AUTH_ERRORS.INVALID_EMAIL: // INVALID EMAIL
-
-					MessageBox.warning(this.getTranslation(oError.code), {
-						onClose: function (oAction) {
-							this.__setInputEmailFocus(100);
-						}.bind(this)
-					});
-					break;
-
-				case Constant.AUTH_ERRORS.USER_NOT_FOUND: // NO ACCOUNT
-
-					MessageBox.warning(this.getTranslation(oError.code), {
-						id: "Warning-User-Not-Found",
-						actions: [MessageBox.Action.YES, MessageBox.Action.NO],
-						initialFocus: MessageBox.Action.NO,
-						onClose: function (oAction) {
-							if (oAction === MessageBox.Action.YES) {
-								this.navTo(Constant.PAGES.SIGN_UP, {
-									email: sEmail
-								});
-							} else {
-								this.__setInputEmailFocus(100);
-							}
-						}.bind(this)
-					});
-					break;
-
-				default:
-					MessageBox.warning(oError.message);
-
-				}
-			};
-
-			FirebaseService.getInstance()
-				.sendPasswordResetEmail(sEmail)
-				.then(fnSendEmailCallbackSuccess.bind(this))
-				.catch(fnSendEmailCallbackError.bind(this));
-		},
-
 		///////////////////////////////////////////////////////////////////////
 		//	PUBLIC METHOD
 		///////////////////////////////////////////////////////////////////////
 
-		/**
-		 * Enable/Disable signIn button
-		 * 
-		 * @public
-		 */
-		isValidForm: function (sEmail) {
-			if (!Utility.isValidEmail(sEmail)) {
-				return false;
-			}
-			return true;
-		},
-
-		/**
-		 * @public
-		 */
-		getInputEmail: function () {
-			return this.byId("PwForget-SimpleForm-Input-Email");
-		},
 
 		///////////////////////////////////////////////////////////////////////
 		//	PRIVATE METHOD
@@ -199,34 +98,17 @@ sap.ui.define([
 		 */
 		__createModel: function () {
 			this.setViewModel(new JSONModel({
-				"email": "",
-				"emailFocusOut": false
+				
 			}), "viewModel");
 		},
 
 		/**
-		 *    
+		 * Init view controls binding
 		 * 
 		 * @private
 		 */
 		__setBindingForView: function () {
-			this.__resetForm();
-		},
-
-		/**
-		 * @private
-		 */
-		__resetForm: function () {
-			this.setViewModelProperty("viewModel", "/email", "");
-		},
-
-		/**
-		 * @private
-		 */
-		__setInputEmailFocus: function (iDelay) {
-			jQuery.sap.delayedCall(iDelay, this, function () {
-				this.getInputEmail().focus();
-			});
+			
 		}
 	});
 

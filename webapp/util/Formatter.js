@@ -5,21 +5,25 @@ sap.ui.define([
 
 	return {
 
-		formatEmailValueState: function (sEmail) {
-			var sValueState = sap.ui.core.ValueState.None;
-			if (sEmail && !Utility.isValidEmail(sEmail)) {
-				sValueState = sap.ui.core.ValueState.Error;
+		formatEmailInputValueState: function (sEmail, bValid) {
+			if (bValid && sEmail && !Utility.isValidEmail(sEmail)) {
+				return sap.ui.core.ValueState.Error;
 			}
-			return sValueState;
+			return sap.ui.core.ValueState.None;
+		},
+
+		formatPasswordOneInputValueState: function (sPasswordOne) {
+			if (sPasswordOne && sPasswordOne.length < 6) {
+				return sap.ui.core.ValueState.Error;
+			}
+			return sap.ui.core.ValueState.None;
+		},
+
+		formatPasswordTwoInputValueState: function (sPasswordOne, sPasswordTwo) {
+			if (sPasswordTwo && (sPasswordOne !== sPasswordTwo)) {
+				return sap.ui.core.ValueState.Error;
+			}
+			return sap.ui.core.ValueState.None;
 		}
-
-		// formatPasswordValueState: function (sPassword) {
-		// 	var sValueState = sap.ui.core.ValueState.None;
-		// 	if (!sPassword) {
-		// 		sValueState = sap.ui.core.ValueState.Error;
-		// 	}
-		// 	return sValueState;
-		// }
-
 	};
 });
