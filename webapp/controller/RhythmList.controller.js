@@ -79,14 +79,17 @@ sap.ui.define([
 		//
 		//	}
 
-		onSignOutButtonPress: function() {
-			FirebaseService.getInstance().signOut();	
+		onSignOutButtonPress: function () {
+			FirebaseService.getInstance().signOut();
+		},
+
+		onAvatarButtonPress: function() {
+			this.navTo(Constant.PAGES.ACCOUNT);
 		},
 		
 		///////////////////////////////////////////////////////////////////////
 		//	PUBLIC METHOD
 		///////////////////////////////////////////////////////////////////////
-
 
 		///////////////////////////////////////////////////////////////////////
 		//	PRIVATE METHOD
@@ -98,7 +101,8 @@ sap.ui.define([
 		 */
 		__createModel: function () {
 			this.setViewModel(new JSONModel({
-				
+				"photoURL": "",
+				"displayName": ""
 			}), "viewModel");
 		},
 
@@ -108,7 +112,9 @@ sap.ui.define([
 		 * @private
 		 */
 		__setBindingForView: function () {
-			
+			var oUser = FirebaseService.getInstance().getUser();
+			this.setViewModelProperty("viewModel", "/photoURL", oUser.photoURL);
+			this.setViewModelProperty("viewModel", "/displayName", oUser.displayName);
 		}
 	});
 

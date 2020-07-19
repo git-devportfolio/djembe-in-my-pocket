@@ -98,16 +98,28 @@
 					"Exception"
 				]
 			}, {
-				"name": "Profile",
-				"pattern": "Profile",
+				"name": "Account",
+				"pattern": "Account",
 				"target": [
-					"Profile"
+					"Account"
 				]
 			}, {
 				"name": "RhythmList",
 				"pattern": "RhythmList",
 				"target": [
 					"RhythmList"
+				]
+			}, {
+				"name": "EmailVerification",
+				"pattern": "EmailVerification",
+				"target": [
+					"EmailVerification"
+				]
+			}, {
+				"name": "UpdateEmail",
+				"pattern": "UpdateEmail",
+				"target": [
+					"UpdateEmail"
 				]
 			}],
 			"targets": {
@@ -127,13 +139,21 @@
 					"viewType": "XML",
 					"viewName": "Exception"
 				},
-				"Profile": {
+				"Account": {
 					"viewType": "XML",
-					"viewName": "Profile"
+					"viewName": "Account"
 				},
 				"RhythmList": {
 					"viewType": "XML",
 					"viewName": "RhythmList"
+				},
+				"EmailVerification": {
+					"viewType": "XML",
+					"viewName": "EmailVerification"
+				},
+				"UpdateEmail": {
+					"viewType": "XML",
+					"viewName": "UpdateEmail"
 				}
 			}
 		},

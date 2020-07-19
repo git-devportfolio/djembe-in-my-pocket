@@ -86,19 +86,20 @@ sap.ui.define([
 		 * @public
 		 */
 		onAuthStateChanged: function (oUser) {
-			
+
 			Loader.getInstance().close();
-			
+
 			if (oUser) {
-				
-				sap.ui.getCore().getEventBus().publish(
-					Constant.EVENTS.CHANNEL_ID,
-					Constant.EVENTS.SIGN_IN,
-					oUser
-				);
-				
+
 				// User is signed in.
 				this.__oUser = oUser;
+
+				// Sign in user or  
+				if (oUser.emailVerified) {
+					this._sendEvent(Constant.EVENTS.CHANNEL_ID, Constant.EVENTS.SIGN_IN); // Log User 
+				} else {
+					this._sendEvent(Constant.EVENTS.CHANNEL_ID, Constant.EVENTS.EMAIL_VERIFICATION); // Confirm User Email
+				}
 
 				// var displayName = oUser.displayName;
 				// var email = oUser.email;
@@ -114,10 +115,8 @@ sap.ui.define([
 				// User is signed out.
 				this.__oUser = null;
 
-				// sap.ui.getCore().getEventBus().publish(
-				// 	Constant.EVENTS.CHANNEL_ID,
-				// 	Constant.EVENTS.SIGN_OUT
-				// );
+				// Log out User
+				this._sendEvent(Constant.EVENTS.CHANNEL_ID, Constant.EVENTS.SIGN_OUT);
 			}
 		},
 
@@ -141,7 +140,7 @@ sap.ui.define([
 		 * @public
 		 */
 		getCurrentUser: function () {
-			return firebase.aut().currentUser;
+			return firebase.auth().currentUser;
 		},
 
 		/**
@@ -195,12 +194,11 @@ sap.ui.define([
 		 * @see https://firebase.google.com/docs/auth/web/facebook-login
 		 * @public
 		 */
-		 
-		signInWithFacebookAccount: function() {
+		signInWithFacebookAccount: function () {
 			var oProvider = new firebase.auth.FacebookAuthProvider();
 			firebase.auth().signInWithRedirect(oProvider);
 		},
-		
+
 		/**
 		 * Gets the list of possible sign in methods for the given email address
 		 * 
@@ -224,7 +222,37 @@ sap.ui.define([
 		sendPasswordResetEmail: function (sEmail) {
 			return firebase.auth().sendPasswordResetEmail(sEmail);
 		},
-		
+
+		/**
+		 * Set a user's email address
+		 * 
+		 * @returns {promise}
+		 * 
+		 * @see https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile
+		 * @public
+		 */
+		setUserEmailAddress: function (sEmail) {
+			this.onRequestSent();
+			return this.getCurrentUser()
+				.updateEmail(sEmail)
+				.finally(this.onRequestCompleted.bind(this));
+		},
+
+		/**
+		 * Send a user a verification email
+		 * 
+		 * @returns {promise}
+		 * 
+		 * @see https://firebase.google.com/docs/auth/web/manage-users#send_a_user_a_verification_email
+		 * @public
+		 */
+		sendEmailVerification: function () {
+			this.onRequestSent();
+			return this.getCurrentUser()
+				.sendEmailVerification()
+				.finally(this.onRequestCompleted.bind(this));
+		},
+
 		/**
 		 * To sign out a user
 		 * 
@@ -234,6 +262,17 @@ sap.ui.define([
 		 */
 		signOut: function () {
 			firebase.auth().signOut();
+		},
+
+		/**
+		 * Utility to send a bus event
+		 * @public
+		 * @param {string} channel Event channel
+		 * @param {string} event Event name
+		 * @param {object} data Event data
+		 */
+		_sendEvent: function (channel, event, data) {
+			sap.ui.getCore().getEventBus().publish(channel, event, data);
 		}
 
 	});

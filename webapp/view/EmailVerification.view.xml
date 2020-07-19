@@ -1,0 +1,58 @@
+<mvc:View 
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core" 
+	xmlns:mvc="sap.ui.core.mvc"  
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	controllerName="djembe.in.my.pocket.controller.EmailVerification">
+
+		<!--http://zduck.com/2013/user-sign-up-and-email-confirmation-ux-boilerplate/-->
+
+		<Page 
+			showHeader="true"
+			title="SignUp Confirm Page">
+			
+			<customHeader>
+				<Toolbar 
+					style="Clear"
+					design="Solid">
+					
+					<Button 
+						press="onNavBackButtonPress"
+						icon="sap-icon://nav-back"
+						text="{i18n>EmailVerificationViewNavBackButtonText}" />
+					
+				</Toolbar>
+			</customHeader>
+		
+			<MessagePage 
+				showHeader="false"
+				icon="sap-icon://email"
+				enableFormattedText="true"
+				id="EmailVerification-MessagePage"
+				text="{i18n>EmailVerificationViewMessagePageText}"
+				description="{i18n>EmailVerificationViewMessagePageDescriptionL1}
+							 {i18n>EmailVerificationViewMessagePageDescriptionL2}
+							 {i18n>EmailVerificationViewMessagePageDescriptionL3}">
+				
+				<buttons>
+					
+					<Button 
+						type="Ghost"
+						width="10rem"
+						press="onSendEmailButtonPress"
+						text="{i18n>EmailVerificationViewMessagePageSendEmailButton}" />
+						
+					<Button 
+						type="Ghost"
+						width="10rem" 
+						
+						press="onUpdateEmailButtonPress"
+						text="{i18n>EmailVerificationViewMessagePageUpdateEmailButton}" />
+						
+				</buttons>
+				
+			</MessagePage>
+
+		</Page>
+	
+</mvc:View>

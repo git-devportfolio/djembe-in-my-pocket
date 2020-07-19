@@ -1,0 +1,114 @@
+<mvc:View 
+	xmlns="sap.m"
+	xmlns:core="sap.ui.core" 
+	xmlns:mvc="sap.ui.core.mvc"  
+	xmlns:form="sap.ui.layout.form"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	controllerName="djembe.in.my.pocket.controller.UpdateEmail">
+	
+		<Page 
+			showHeader="false"
+			title="Update Email" 
+			id="UpdateEmail-Page"
+			showNavButton="true"
+			enableScrolling="false">
+			
+			<!--<customHeader>-->
+			<!--	<Toolbar -->
+			<!--		style="Clear"-->
+			<!--		design="Solid">-->
+				
+			<!--		<Button -->
+			<!--			press="onNavBackButtonPress"-->
+			<!--			icon="sap-icon://nav-back"-->
+			<!--			text="{i18n>updateEmailNavBackButtonText}" />-->
+					
+			<!--	</Toolbar>-->
+			<!--</customHeader>-->
+			
+			<VBox 
+				width="auto" 
+				alignItems="Center" 
+				fitContainer="true"
+				justifyContent="Center" >
+				
+				<VBox 
+					width="25rem"
+					id="UpdateEmail-Form">
+					
+					<VBox class="sapUiMediumMargin">
+						
+						<VBox class="text-center">
+							<Title 
+								text="{i18n>updateEmailViewFormTitle}" 
+								titleStyle="H1"/>
+								
+							<Title 
+								titleStyle="H3"
+								class="sapUiSmallMarginTop"
+								text="{i18n>updateEmailViewFormSubTitle}" />
+						</VBox>
+						
+						<VBox class="sapUiMediumMarginBottom">
+							<form:SimpleForm id="UpdateEmail-SimpleForm-Email">
+								<form:content>
+										
+									<Label 
+										text="{i18n>updateEmailViewFormInputEmail}" 
+										labelFor="UpdateEmail-SimpleForm-Input-Email" />
+											
+									<Input 
+										type="Email" 
+										maxLength="100"
+										valueLiveUpdate="true"
+										value="{viewModel>/email}"
+										change="onInputEmailChange"
+										showValueStateMessage="true" 
+										submit="onUpdateEmailButtonPress"
+										id="UpdateEmail-SimpleForm-Input-Email"
+										valueStateText="{i18n>auth/invalid-email}"
+										placeholder="{i18n>updateEmailViewFormInputEmailPlaceholder}" 
+										valueState="{ parts: [ { path: 'viewModel>/newEmail' },
+															   { path: 'viewModel>/emailFocusOut' } ], 
+														formatter: '.formatter.formatEmailInputValueState' }" />
+														
+								</form:content>
+							</form:SimpleForm>		
+							
+							<VBox class="sapUiTinyMarginTop text-center">
+								
+								<Title 
+									text="{i18n>updateEmailViewFormLabelCurrentEmail}" />
+									
+								<Text 
+									textAlign="Center"
+									text="{viewModel>/currentEmail}"
+									id="UpdateEmail-SimpleForm-Text-Current-Email"/>
+									
+							</VBox>
+							
+						</VBox>
+						
+						<form:SimpleForm id="SignUp-SimpleForm-Submit">
+							<form:content>
+	
+								<Button 
+									width="100%"
+									type="Default"
+									id="UpdateEmail-Submit-Button"
+									press="onUpdateEmailButtonPress"
+									text="{i18n>updateEmailViewFormUpdateEmailButtonText}" 
+									enabled="{ parts: [ { path: 'viewModel>/email' } ], 
+												formatter: '.isValidForm' }" />
+
+							</form:content>
+						</form:SimpleForm>
+					
+					</VBox>
+				
+				</VBox>
+				
+			</VBox>
+	</Page>
+	
+</mvc:View>

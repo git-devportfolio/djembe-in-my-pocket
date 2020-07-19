@@ -10,7 +10,7 @@ sap.ui.define([
 ], function (Theming, BaseController, JSONModel, Constant, Utility, Formatter, FirebaseService, MessageBox) {
 	"use strict";
 
-	return BaseController.extend("djembe.in.my.pocket.controller.Profile", {
+	return BaseController.extend("djembe.in.my.pocket.controller.Account", {
 		///////////////////////////////////////////////////////////////////////
 		//	FORMATTER
 		///////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ sap.ui.define([
 		//	ATTRIBUTES
 		///////////////////////////////////////////////////////////////////////
 
-		__targetName: "Profile",
+		__targetName: "Account",
 
 		///////////////////////////////////////////////////////////////////////
 		//	LIFECYCLE EVENTS
@@ -35,16 +35,10 @@ sap.ui.define([
 		onInit: function () {
 			BaseController.prototype.onInit.apply(this, arguments);
 
-			sap.ui.getCore().getEventBus().subscribe(
-				Constant.EVENTS.CHANNEL_ID,
-				Constant.EVENTS.SIGN_OUT,
-				this.onSignOutEventHandler,
-				this
-			);
-			
 			this.__createModel();
+			this.__subscribeEvents();
 		},
-		
+
 		/** 
 		 * Event to initialize this UI5 Control. Call the backend 
 		 * service and update view with data model.
@@ -63,7 +57,7 @@ sap.ui.define([
 				this.navTo(Constant.PAGES.SIGN_IN);
 			}
 		},
-		
+
 		/**
 		 * match a routing path
 		 * @public
@@ -75,6 +69,48 @@ sap.ui.define([
 
 			// 
 			this.__setBindingForView();
+		},
+
+		/**
+		 * 
+		 * @public
+		 * @param {object} oEvent UI5 event
+		 */
+		onLogoutButtonPress: function (oEvent) {
+			FirebaseService.getInstance().signOut();
+		},
+
+		/**
+		 * 
+		 * @public
+		 * @param {object} oEvent UI5 event
+		 */
+		onOkButtonPress: function (oEvent) {
+
+		},
+
+		/**
+		 * 
+		 * @public
+		 * @param {object} oEvent UI5 event
+		 */
+		onApplyThemeChange: function (oEvent) {
+			if (oEvent.getParameter("state")) {
+				sap.ui.getCore().applyTheme("sap_fiori_3_dark");
+			} else {
+				sap.ui.getCore().applyTheme("sap_fiori_3");
+			}
+		},
+
+		///////////////////////////////////////////////////////////////////////
+		//	PUBLIC METHOD
+		///////////////////////////////////////////////////////////////////////
+
+		/**
+		 * @public
+		 */
+		getLogOutButton: function () {
+			return this.byId("Account-Logout-Button");
 		},
 
 		///////////////////////////////////////////////////////////////////////
@@ -96,13 +132,13 @@ sap.ui.define([
 		 * @memberOf djembe.in.my.pocket.view.Login
 		 */
 		onAfterRendering: function () {
-			// this.byId("Account-Form-Email").$().css("color", Theming.get("sapUiContentDisabledTextColor"));
+			this.getLogOutButton().$().find(".sapMSLITitleOnly").css("color", Theming.get("sapUiButtonRejectHoverTextColor"));
 		},
 
-		onSignOutButtonPress: function() {
-			FirebaseService.getInstance().signOut();	
+		onSignOutButtonPress: function () {
+			FirebaseService.getInstance().signOut();
 		},
-		
+
 		/**
 		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
 		 * @memberOf djembe.in.my.pocket.view.Login
@@ -110,65 +146,6 @@ sap.ui.define([
 		//	onExit: function() {
 		//
 		//	}
-
-		/**
-		 * Nav to create account view
-		 * 
-		 * @public
-		 * @param {object} oEvent UI5 event
-		 */
-		// onLinkSignUpPress: function (oEvent) {
-		// 	this.navTo(Constant.PAGES.SIGN_UP);
-		// },
-
-		/**
-		 * Nav to reset password view
-		 * 
-		 * @public
-		 * @param {object} oEvent UI5 event
-		 */
-		// onLinkPwForgetPress: function (oEvent) {
-		// 	this.navTo(Constant.PAGES.PW_FORGET);
-		// },
-
-		/**
-		 * Allows existing users to sign in using their email address and password
-		 * 
-		 * @public
-		 * @param {event} oEvent UI5 event
-		 */
-		// onSignInButtonPress: function (oEvent) {
-		// 	var oModel = this.getViewModel("viewModel");
-		// 	var oData = oModel.getData(); 
-
-		// 	var fnSignInCallbackSuccess = function () {
-		// 		var sEmail = oData.email.toLowerCase();
-		// 	};
-
-		// 	var fnSignInCallbackError = function (oError) {
-		// 		MessageBox.error(oError.message /* this.getTranslation("signInViewAuthenticationErrorMessage") */ );
-		// 	};
-
-		// 	FirebaseService.getInstance()
-		// 		.signInWithEmailAndPassword(oData.email, oData.password)
-		// 		.then(fnSignInCallbackSuccess.bind(this))
-		// 		.catch(fnSignInCallbackError.bind(this));
-		// },
-
-		/**
-		 * Enable/Disable signIn button
-		 * 
-		 * @public
-		 */
-		// isValidForm: function (sEmail, sPassword) {
-		// 	if (!Utility.isValidEmail(sEmail)) {
-		// 		return false;
-		// 	}
-		// 	if (!sPassword) {
-		// 		return false;
-		// 	}
-		// 	return true;
-		// },
 
 		///////////////////////////////////////////////////////////////////////
 		//	PRIVATE METHOD
@@ -205,6 +182,13 @@ sap.ui.define([
 			this.setViewModelProperty("viewModel", "/isAnonymous", oUser.isAnonymous);
 			this.setViewModelProperty("viewModel", "/providerData", oUser.providerData);
 			this.setViewModelProperty("viewModel", "/emailVerified", oUser.emailVerified);
+		},
+
+		/**
+		 * @private
+		 */
+		__subscribeEvents: function () {
+			this.subscribe(Constant.EVENTS.CHANNEL_ID, Constant.EVENTS.SIGN_OUT, this.onSignOutEventHandler, this);
 		}
 	});
 

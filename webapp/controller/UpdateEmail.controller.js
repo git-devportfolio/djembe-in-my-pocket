@@ -10,7 +10,7 @@ sap.ui.define([
 ], function (Theming, BaseController, JSONModel, Constant, Utility, Formatter, FirebaseService, MessageBox) {
 	"use strict";
 
-	return BaseController.extend("djembe.in.my.pocket.controller.SignUp", {
+	return BaseController.extend("djembe.in.my.pocket.controller.UpdateEmail", {
 		///////////////////////////////////////////////////////////////////////
 		//	FORMATTER
 		///////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@ sap.ui.define([
 		//	ATTRIBUTES
 		///////////////////////////////////////////////////////////////////////
 
-		__targetName: "SignUp",
+		__targetName: "UpdateEmail",
 
 		///////////////////////////////////////////////////////////////////////
 		//	LIFECYCLE EVENTS
@@ -58,36 +58,26 @@ sap.ui.define([
 		/**
 		 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered
 		 * (NOT before the first rendering! onInit() is used for that one!).
-		 * @memberOf djembe.in.my.pocket.view.SignUp
+		 * @memberOf djembe.in.my.pocket.view.UpdateEmail
 		 */
 		onBeforeRendering: function () {},
 
 		/**
 		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
 		 * This hook is the same one that SAPUI5 controls get after being rendered.
-		 * @memberOf djembe.in.my.pocket.view.SignUp
+		 * @memberOf djembe.in.my.pocket.view.UpdateEmail
 		 */
 		onAfterRendering: function () {
-			// this.byId("SignUp-Form").$().css("background-color", Theming.get("sapUiFieldBackground"));
+			// this.byId("UpdateEmail-Form").$().css("background-color", Theming.get("sapUiFieldBackground"));
 		},
 
 		/**
 		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
-		 * @memberOf djembe.in.my.pocket.view.SignUp
+		 * @memberOf djembe.in.my.pocket.view.UpdateEmail
 		 */
 		//	onExit: function() {
 		//
 		//	}
-
-		/**
-		 * Nav to sign in view
-		 * 
-		 * @public
-		 * @param {object} oEvent UI5 event
-		 */
-		onLinkSignInPress: function (oEvent) {
-			this.navTo(Constant.PAGES.SIGN_IN);
-		},
 
 		/**
 		 * Show email valueStateText on focus out  
@@ -105,76 +95,41 @@ sap.ui.define([
 		 * @public
 		 * @param {event} oEvent UI5 event
 		 */
-		onSignUpButtonPress: function (oEvent) {
+		onUpdateEmailButtonPress: function (oEvent) {
 			var oModel = this.getViewModel("viewModel");
 			var oData = oModel.getData();
 
-			var fnSignUpCallbackSuccess = function (oUserCredential) {
-				var oUser = oUserCredential.user;
-
-				if (oUser && oUser.emailVerified === false) {
-					oUser.sendEmailVerification().then(function () {
-						this.navTo(Constant.PAGES.EMAIL_VERIFICATION);
-					}.bind(this));
-				}
+			var fnCallbackSuccess = function () {
+				this.navTo(Constant.PAGES.EMAIL_VERIFICATION);
+				FirebaseService.getInstance().sendEmailVerification();
 			};
 
-			var fnSignUpCallbackError = function (oError) {
+			var fnCallbackError = function (oError) {
 
 				switch (oError.code) {
 
-				case Constant.AUTH_ERRORS.EMAIL_ALREADY_IN_USE:
-
+				case Constant.AUTH_ERRORS.REQUIRES_RECENT_LOGIN:
+					
 					MessageBox.warning(this.getTranslation(oError.code), {
-						id: "MessageBox-Email-Already-Use",
-						actions: [MessageBox.Action.YES, MessageBox.Action.NO],
+						id: "MessageBox-Requires-Recent-Login",
+						actions: [MessageBox.Action.OK],
 						initialFocus: MessageBox.Action.NO,
 						onClose: function (oAction) {
-							if (oAction === MessageBox.Action.YES) {
+							if (oAction === MessageBox.Action.OK) {
 								this.navTo(Constant.PAGES.SIGN_IN);
-							} else {
-								this.__setInputEmailFocus(100);
-								this.setViewModelProperty("viewModel", "/emailFocusOut", false);
 							}
 						}.bind(this)
 					});
 					break;
-
-				case Constant.AUTH_ERRORS.OPERATION_NOT_ALLOWED:
-
-					MessageBox.warning(this.getTranslation(oError.code), {
-						actions: [MessageBox.Action.YES, MessageBox.Action.NO],
-						initialFocus: MessageBox.Action.NO,
-						onClose: function (oAction) {
-							if (oAction === MessageBox.Action.YES) {
-								this.navTo(Constant.PAGES.SIGN_UP);
-							} else {
-								this.__setInputEmailFocus(100);
-								this.setViewModelProperty("viewModel", "/emailFocusOut", false);
-							}
-						}.bind(this)
-					});
-					break;
-
-				case Constant.AUTH_ERRORS.WEAK_PASSWORD:
-
-					MessageBox.warning(this.getTranslation(oError.code), {
-						onClose: function (oAction) {
-							this.__setInputPasswordOneFocus(100);
-						}.bind(this)
-					});
-					break;
-
-				default:
 				}
 			};
 
-			if (this.isValidForm(oData.email, oData.passwordOne, oData.passwordTwo)) {
+			if (this.isValidForm(oData.email)) {
 
 				FirebaseService.getInstance()
-					.createUserWithEmailAndPassword(oData.email, oData.passwordOne)
-					.then(fnSignUpCallbackSuccess.bind(this))
-					.catch(fnSignUpCallbackError.bind(this));
+					.setUserEmailAddress(oData.email)
+					.then(fnCallbackSuccess.bind(this))
+					.catch(fnCallbackError.bind(this));
 			}
 		},
 
@@ -183,11 +138,8 @@ sap.ui.define([
 		 * 
 		 * @public
 		 */
-		isValidForm: function (sEmail, sPasswordOne, sPasswordTwo) {
-			if (!sEmail || !sPasswordOne || !sPasswordTwo) {
-				return false;
-			}
-			if (sPasswordOne !== sPasswordTwo) {
+		isValidForm: function (sEmail) {
+			if (!sEmail) {
 				return false;
 			}
 			if (!Utility.isValidEmail(sEmail)) {
@@ -200,14 +152,14 @@ sap.ui.define([
 		 * @public
 		 */
 		getInputEmail: function () {
-			return this.byId("SignUp-SimpleForm-Input-Email");
+			return this.byId("UpdateEmail-SimpleForm-Input-Email");
 		},
 
 		/**
 		 * @public
 		 */
-		getInputPasswordOne: function () {
-			return this.byId("SignUp-SimpleForm-Input-Password-One");
+		getCurrentEmailText: function () {
+			return this.byId("UpdateEmail-SimpleForm-Text-Current-Email");
 		},
 
 		///////////////////////////////////////////////////////////////////////
@@ -220,10 +172,8 @@ sap.ui.define([
 		 */
 		__createModel: function () {
 			this.setViewModel(new JSONModel({
-				"username": "",
-				"email": "",
-				"passwordOne": "",
-				"passwordTwo": "",
+				"newEmail": "",
+				"currentEmail": "",
 				"emailFocusOut": false
 			}), "viewModel");
 		},
@@ -234,25 +184,18 @@ sap.ui.define([
 		 * @private
 		 */
 		__setBindingForView: function (oEvent) {
-			var oArgs = oEvent.getParameter("arguments");
+			var oUser = FirebaseService.getInstance().getCurrentUser();
 
 			this.__resetForm();
-
-			if (oArgs.email) { // 
-				this.__setInputPasswordOneFocus(350);
-				this.setViewModelProperty("viewModel", "/email", oArgs.email);
-			} else {
-				this.__setInputEmailFocus(350);
-			}
+			this.__setInputEmailFocus(400);
+			this.setViewModelProperty("viewModel", "/currentEmail", oUser.email);
 		},
 
 		/**
 		 * @private
 		 */
 		__resetForm: function () {
-			this.setViewModelProperty("viewModel", "/email", "");
-			this.setViewModelProperty("viewModel", "/passwordOne", "");
-			this.setViewModelProperty("viewModel", "/passwordTwo", "");
+			this.setViewModelProperty("viewModel", "/newEmail", "");
 		},
 
 		/**
@@ -262,17 +205,7 @@ sap.ui.define([
 			jQuery.sap.delayedCall(iDelay, this, function () {
 				this.getInputEmail().focus();
 			});
-		},
-
-		/**
-		 * @private
-		 */
-		__setInputPasswordOneFocus: function (iDelay) {
-			jQuery.sap.delayedCall(iDelay, this, function () {
-				this.getInputPasswordOne().focus();
-			});
 		}
-
 	});
 
 });

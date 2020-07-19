@@ -6,16 +6,19 @@ sap.ui.define([], function () {
 		PAGES: {
 			SIGN_IN: "SignIn",
 			SIGN_UP: "SignUp",
-			PROFILE: "Profile",
+			ACCOUNT: "Account",
 			PW_FORGET: "PwForget",
 			EXCEPTION: "Exception",
-			RHYTHM_LIST: "RhythmList"
+			RHYTHM_LIST: "RhythmList",
+			UPDATE_EMAIL: "UpdateEmail",
+			EMAIL_VERIFICATION: "EmailVerification"
 		},
 
 		EVENTS: {
 			CHANNEL_ID: "djembe.in.my.pocket",
 			SIGN_IN: "SignIn",
-			SIGN_OUT: "SignOut"
+			SIGN_OUT: "SignOut",
+			EMAIL_VERIFICATION: "EmailVerification"
 		},
 
 		AUTH_ERRORS: {
@@ -23,10 +26,12 @@ sap.ui.define([], function () {
 			WEAK_PASSWORD: "auth/weak-password",
 			WRONG_PASSWORD: "auth/wrong-password",
 			USER_NOT_FOUND: "auth/user-not-found",
+			TOO_MANY_REQUESTS: "auth/too-many-requests",
 			EMAIL_ALREADY_IN_USE: "auth/email-already-in-use",
-			OPERATION_NOT_ALLOWED: "auth/operation-not-allowed"
+			OPERATION_NOT_ALLOWED: "auth/operation-not-allowed",
+			REQUIRES_RECENT_LOGIN: "auth/requires-recent-login"
 		},
-		
+
 		FRAGMENTS: {
 			WARNING_POPOVER: "djembe.in.my.pocket.view.fragments.WarningPopover"
 		}

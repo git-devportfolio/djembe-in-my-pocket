@@ -4,23 +4,39 @@
 	xmlns:mvc="sap.ui.core.mvc"  
 	xmlns:form="sap.ui.layout.form"
 	xmlns:html="http://www.w3.org/1999/xhtml" 
+	xmlns:customControl="djembe.in.my.pocket.customControl"
 	controllerName="djembe.in.my.pocket.controller.RhythmList">
 	
 	<Page 
-		title="Profile" 
+		id="RhythmList-Page"
+		title="Rhythm Page" 
 		enableScrolling="false" 
-		showHeader="false">
+		showHeader="true">
+		
+		<customHeader>
+			<Toolbar 
+				style="Clear"
+				design="Solid">
+			
+				<customControl:AvatarButton 
+					displaySize="XS"
+					press="onAvatarButtonPress"
+					src="{viewModel>/photoURL}"
+					displayName="{viewModel>/displayName}" />
+					
+				<ToolbarSpacer />
+				
+				<Button 
+					icon="sap-icon://search" />
+					
+			</Toolbar>
+		</customHeader>
 		
 		<VBox 
 			alignItems="Center" 
 			justifyContent="Center"
 			fitContainer="true">
-		
-			<Button
-				type="Default"
-				class="sapUiMediumMarginTop"
-				press="onSignOutButtonPress" 
-				text="{i18n>profileViewFormSignOutButtonText}" />
+				
 		</VBox>
 		
 	</Page>

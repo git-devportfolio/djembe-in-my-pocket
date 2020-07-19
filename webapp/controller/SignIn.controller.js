@@ -55,6 +55,10 @@ sap.ui.define([
 			if (sEvent === Constant.EVENTS.SIGN_IN) {
 				this.navTo(Constant.PAGES.RHYTHM_LIST);
 			}
+
+			if (sEvent === Constant.EVENTS.EMAIL_VERIFICATION) {
+				this.navTo(Constant.PAGES.EMAIL_VERIFICATION);
+			}
 		},
 
 		/**
@@ -68,7 +72,6 @@ sap.ui.define([
 
 			// Update view model
 			this.__setBindingForView();
-			this.__setInputEmailFocus(350);
 		},
 
 		///////////////////////////////////////////////////////////////////////
@@ -78,14 +81,14 @@ sap.ui.define([
 		/**
 		 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered
 		 * (NOT before the first rendering! onInit() is used for that one!).
-		 * @memberOf djembe.in.my.pocket.view.Login
+		 * @memberOf djembe.in.my.pocket.view.SignIn
 		 */
 		onBeforeRendering: function () {},
 
 		/**
 		 * Called when the View has been rendered (so its HTML is part of the document). Post-rendering manipulations of the HTML could be done here.
 		 * This hook is the same one that SAPUI5 controls get after being rendered.
-		 * @memberOf djembe.in.my.pocket.view.Login
+		 * @memberOf djembe.in.my.pocket.view.SignIn
 		 */
 		onAfterRendering: function () {
 			// this.byId("SignIn-Form").$().css("background-color", Theming.get("sapUiFieldBackground"));
@@ -93,7 +96,7 @@ sap.ui.define([
 
 		/**
 		 * Called when the Controller is destroyed. Use this one to free resources and finalize activities.
-		 * @memberOf djembe.in.my.pocket.view.Login
+		 * @memberOf djembe.in.my.pocket.view.SignIn
 		 */
 		onExit: function () {
 			// this.unsubcribeEvents();
@@ -138,6 +141,16 @@ sap.ui.define([
 		onSignInButtonPress: function (oEvent) {
 			var oModel = this.getViewModel("viewModel");
 			var oData = oModel.getData();
+
+			var fnSignInCallbackSuccess = function (oUserCredential) {
+				var oUser = oUserCredential.user;
+
+				if (oUser && oUser.emailVerified) {
+					this.sendEvent(Constant.EVENTS.CHANNEL_ID, Constant.EVENTS.SIGN_IN); // Log User 
+				} else {
+					this.sendEvent(Constant.EVENTS.CHANNEL_ID, Constant.EVENTS.EMAIL_VERIFICATION); // Confirm User Email
+				}
+			};
 
 			var fnSignInCallbackError = function (oError) {
 
@@ -196,6 +209,7 @@ sap.ui.define([
 			if (this.isValidForm(oData.email, oData.password)) {
 				FirebaseService.getInstance()
 					.signInWithEmailAndPassword(oData.email, oData.password)
+					.then(fnSignInCallbackSuccess.bind(this))
 					.catch(fnSignInCallbackError.bind(this));
 			}
 
@@ -277,6 +291,7 @@ sap.ui.define([
 		 */
 		__setBindingForView: function () {
 			this.__resetForm();
+			this.__setUserCredential();
 		},
 
 		/**
@@ -285,6 +300,21 @@ sap.ui.define([
 		__resetForm: function () {
 			this.setViewModelProperty("viewModel", "/email", "");
 			this.setViewModelProperty("viewModel", "/password", "");
+		},
+
+		/**
+		 * 
+		 * 
+		 * @private
+		 */
+		__setUserCredential: function () {
+			var oUser = FirebaseService.getInstance().getCurrentUser();
+			if (oUser && oUser.email) {
+				this.setViewModelProperty("viewModel", "/email", oUser.email);
+				this.__setInputPasswordFocus(400);
+			} else {
+				this.__setInputEmailFocus(400);
+			}
 		},
 
 		/**
@@ -299,19 +329,24 @@ sap.ui.define([
 		/**
 		 * @private
 		 */
+		__setInputPasswordFocus: function (iDelay) {
+			jQuery.sap.delayedCall(iDelay, this, function () {
+				this.getInputPassword().focus();
+			});
+		},
+
+		/**
+		 * @private
+		 */
 		__subscribeEvents: function () {
-			this.subscribe(
-				Constant.EVENTS.CHANNEL_ID, 
-				Constant.EVENTS.SIGN_IN, 
-				this.onSignInEventHandler, 
-				this);
+			this.subscribe(Constant.EVENTS.CHANNEL_ID, Constant.EVENTS.SIGN_IN, this.onSignInEventHandler, this);
+			this.subscribe(Constant.EVENTS.CHANNEL_ID, Constant.EVENTS.EMAIL_VERIFICATION, this.onSignInEventHandler, this);
 		},
 
 		/**
 		 * @private
 		 */
 		__unsubscribeEvents: function () {
-
 			// this.subscribe(Constant.EVENTS.CHANNEL_ID, Constant.EVENTS.SIGN_IN, this.onSignInEventHandler, this);
 		}
 	});

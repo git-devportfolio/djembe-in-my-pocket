@@ -93,7 +93,6 @@
 									type="Default"
 									id="SignIn-Submit-Button"
 									press="onSignInButtonPress" 
-									icon="sap-icon://person-placeholder" 
 									text="{i18n>signInViewFormSignInButton}" 
 									enabled="{ parts: [ { path: 'viewModel>/email' },  
 														{ path: 'viewModel>/password' } ], 
