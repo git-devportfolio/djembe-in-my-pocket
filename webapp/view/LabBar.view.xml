@@ -1,0 +1,48 @@
+<mvc:View 
+	xmlns:core="sap.ui.core" 
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:html="http://www.w3.org/1999/xhtml"
+	xmlns:customControl="djembe.in.my.pocket.customControl"
+	xmlns="sap.m" controllerName="djembe.in.my.pocket.controller.LabBar">
+
+	<Page 
+		title="Title">
+		
+		<Button text="4/4" />
+		<Button text="6/8" />
+		<Button text="9/8"  />
+		      
+		<VBox class="border-yellow sapUiTinyMargin">
+			
+			<customControl:Sequencer
+				id="Audio-Sequencer"
+				items="{viewModel>/bars}"
+				timeSignature="{viewModel>/timeSignature}">
+				
+				<customControl:items>
+					<customControl:Bar name="{viewModel>name}"  />
+				</customControl:items>
+				
+			</customControl:Sequencer>
+		
+			<!--<Input value="{viewModel>/timeSignature}" />-->
+			
+			<!--<customControl:Bar-->
+			<!--	class="sapUiSmallMargin"-->
+			<!--	stepLength="4" notes="4" />	-->
+			
+			<!--<customControl:Bar -->
+			<!--	class="sapUiSmallMargin"-->
+			<!--	stepLength="32" rows="4" />	-->
+				
+		</VBox>
+		
+		<Button text="Rd Binding" press="onReadBindingTest" />
+		
+		
+		<!--<Text -->
+		<!--	text="Test" />-->
+
+	</Page>
+
+</mvc:View>

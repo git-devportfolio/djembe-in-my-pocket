@@ -45,6 +45,7 @@ sap.ui.define([
 			if (mConfig) {
 				firebase.initializeApp(mConfig);
 				firebase.auth().onAuthStateChanged(this.onAuthStateChanged.bind(this));
+				// var storage = firebase.storage();
 			}
 		},
 
@@ -254,6 +255,39 @@ sap.ui.define([
 		},
 
 		/**
+		 * Update a user's profile (displayName & photoURL)
+		 * 
+		 * @returns {promise}
+		 * 
+		 * @see https://firebase.google.com/docs/auth/web/manage-users#update_a_users_profile
+		 * @public
+		 */
+		updateProfile: function (sDisplayName, sPhotoURL) {
+			this.onRequestSent();
+			return this.getCurrentUser()
+				.updateProfile({
+					displayName: sDisplayName,
+					photoURL: sPhotoURL
+				})
+				.finally(this.onRequestCompleted.bind(this));
+		},
+
+		/**
+		 * Set a user's password
+		 * 
+		 * @returns {promise}
+		 * 
+		 * @see https://firebase.google.com/docs/auth/web/manage-users?hl=en#set_a_users_password
+		 * @public
+		 */
+		updatePassword: function () {
+			this.onRequestSent();
+			return this.getCurrentUser()
+				.updatePassword()
+				.finally(this.onRequestCompleted.bind(this));
+		},
+
+		/**
 		 * To sign out a user
 		 * 
 		 * @returns {void} 
@@ -262,6 +296,32 @@ sap.ui.define([
 		 */
 		signOut: function () {
 			firebase.auth().signOut();
+		},
+
+		/**
+		 * Put request upload file to firebase storage
+		 * 
+		 * @returns {promise} 
+		 * 
+		 * @see https://firebase.google.com/docs/storage/web/upload-files
+		 * @public
+		 */
+		uploadFile: function (mOptions) {
+			this.onRequestSent();
+
+			// 
+			var oStorageRef = firebase.storage().ref();
+
+			// Upload file 
+			var oUploadTask = oStorageRef.child(mOptions.Path + mOptions.File.name).putString(mOptions.File.src, "data_url");
+
+			// Listen for state changes, errors, and completion of the upload.
+			oUploadTask.on(firebase.storage.TaskEvent.STATE_CHANGED, mOptions.OnStatusChange, mOptions.OnError, function () {
+				mOptions.OnSuccess(oUploadTask);
+			});
+
+			//
+			oUploadTask.then(this.onRequestCompleted.bind(this));
 		},
 
 		/**

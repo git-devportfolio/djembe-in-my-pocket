@@ -133,7 +133,7 @@ sap.ui.define([
 							if (oAction === MessageBox.Action.YES) {
 								this.navTo(Constant.PAGES.SIGN_IN);
 							} else {
-								this.__setInputEmailFocus(100);
+								this.__setInputEmailFocus(Constant.UI.DELAY_FOCUS);
 								this.setViewModelProperty("viewModel", "/emailFocusOut", false);
 							}
 						}.bind(this)

@@ -113,6 +113,8 @@ sap.ui.define([
 		 */
 		__setBindingForView: function () {
 			var oUser = FirebaseService.getInstance().getUser();
+			
+			this.setViewModelProperty("viewModel", "/email", oUser.email);
 			this.setViewModelProperty("viewModel", "/photoURL", oUser.photoURL);
 			this.setViewModelProperty("viewModel", "/displayName", oUser.displayName);
 		}

@@ -22,7 +22,7 @@
 					displaySize="XS"
 					press="onAvatarButtonPress"
 					src="{viewModel>/photoURL}"
-					displayName="{viewModel>/displayName}" />
+					displayName="{= ${viewModel>/displayName} === null ? ${viewModel>/email} : ${viewModel>/displayName} }" />
 					
 				<ToolbarSpacer />
 				

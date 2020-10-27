@@ -23,8 +23,8 @@ sap.ui.define([
 		//	ATTRIBUTES
 		///////////////////////////////////////////////////////////////////////
 
-		__targetName: "EmailVerification",
 		__timeoutID: null,
+		__targetName: "EmailVerification",
 
 		///////////////////////////////////////////////////////////////////////
 		//	LIFECYCLE EVENTS
@@ -118,13 +118,6 @@ sap.ui.define([
 			return this.byId("EmailVerification-MessagePage");
 		},
 
-		/**
-		 * @public
-		 */
-		getBusyDialog: function () {
-			return this.byId("EmailVerification-BusyDialog");
-		},
-
 		///////////////////////////////////////////////////////////////////////
 		//	PRIVATE METHOD
 		///////////////////////////////////////////////////////////////////////
@@ -177,14 +170,11 @@ sap.ui.define([
 		 * @private
 		 */
 		__setBindingForView: function (oEvent) {
-			var sDescription = null;
 			var oUser = FirebaseService.getInstance().getCurrentUser();
-
-			sDescription = this.getTranslation("EmailVerificationViewMessagePageDescriptionL1", [oUser.email]);
-			sDescription += this.getTranslation("EmailVerificationViewMessagePageDescriptionL2");
-			sDescription += this.getTranslation("EmailVerificationViewMessagePageDescriptionL3");
-
+			var sDescription = this.getTranslation("EmailVerificationViewMessagePageDescription", [oUser.email]);
+		
 			this.getMessagePage().setDescription(sDescription);
+			
 		},
 
 		/**
@@ -195,6 +185,7 @@ sap.ui.define([
 		__showSendEmailSuccessMessage: function () {
 			setTimeout(function () {
 				MessageBox.success(this.getTranslation("EmailVerificationViewSendEmailSuccesMessageText"), {
+					id: "MessageBox-Send-Email-Success",
 					title: this.getTranslation("EmailVerificationViewSendEmailSuccesMessageTitle"),
 					actions: this.getTranslation("EmailVerificationViewSendEmailSuccesMessageAction")
 				});

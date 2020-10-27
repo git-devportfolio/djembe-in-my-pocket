@@ -99,17 +99,19 @@ sap.ui.define([
 			var oModel = this.getViewModel("viewModel");
 			var oData = oModel.getData();
 
+			
 			var fnCallbackSuccess = function () {
+			
 				this.navTo(Constant.PAGES.EMAIL_VERIFICATION);
 				FirebaseService.getInstance().sendEmailVerification();
 			};
 
 			var fnCallbackError = function (oError) {
-
+				
 				switch (oError.code) {
 
 				case Constant.AUTH_ERRORS.REQUIRES_RECENT_LOGIN:
-					
+
 					MessageBox.warning(this.getTranslation(oError.code), {
 						id: "MessageBox-Requires-Recent-Login",
 						actions: [MessageBox.Action.OK],
@@ -124,10 +126,10 @@ sap.ui.define([
 				}
 			};
 
-			if (this.isValidForm(oData.email)) {
+			if (this.isValidForm(oData.newEmail)) {
 
 				FirebaseService.getInstance()
-					.setUserEmailAddress(oData.email)
+					.setUserEmailAddress(oData.newEmail)
 					.then(fnCallbackSuccess.bind(this))
 					.catch(fnCallbackError.bind(this));
 			}
@@ -187,7 +189,7 @@ sap.ui.define([
 			var oUser = FirebaseService.getInstance().getCurrentUser();
 
 			this.__resetForm();
-			this.__setInputEmailFocus(400);
+			this.__setInputEmailFocus(Constant.UI.DELAY_FOCUS);
 			this.setViewModelProperty("viewModel", "/currentEmail", oUser.email);
 		},
 

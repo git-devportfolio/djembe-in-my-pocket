@@ -137,7 +137,7 @@ sap.ui.define([
 
 		renderAvatarComponent: function (oRm, oControl) {
 			var oAvatar = oControl.getAggregation("_Avatar");
-			oAvatar.addStyleClass("sapUiTinyMarginEnd");
+			oAvatar.addStyleClass("sapUiSmallMarginEnd");
 			oRm.renderControl(oAvatar);
 		},
 

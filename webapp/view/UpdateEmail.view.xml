@@ -7,24 +7,24 @@
 	controllerName="djembe.in.my.pocket.controller.UpdateEmail">
 	
 		<Page 
-			showHeader="false"
+			showHeader="true"
 			title="Update Email" 
 			id="UpdateEmail-Page"
 			showNavButton="true"
 			enableScrolling="false">
 			
-			<!--<customHeader>-->
-			<!--	<Toolbar -->
-			<!--		style="Clear"-->
-			<!--		design="Solid">-->
+			<customHeader>
+				<Toolbar 
+					style="Clear"
+					design="Solid">
 				
-			<!--		<Button -->
-			<!--			press="onNavBackButtonPress"-->
-			<!--			icon="sap-icon://nav-back"-->
-			<!--			text="{i18n>updateEmailNavBackButtonText}" />-->
+					<Button 
+						press="onNavBackButtonPress"
+						icon="sap-icon://nav-back"
+						text="{i18n>updateEmailNavBackButtonText}" />
 					
-			<!--	</Toolbar>-->
-			<!--</customHeader>-->
+				</Toolbar>
+			</customHeader>
 			
 			<VBox 
 				width="auto" 
@@ -61,7 +61,7 @@
 										type="Email" 
 										maxLength="100"
 										valueLiveUpdate="true"
-										value="{viewModel>/email}"
+										value="{viewModel>/newEmail}"
 										change="onInputEmailChange"
 										showValueStateMessage="true" 
 										submit="onUpdateEmailButtonPress"
@@ -98,7 +98,7 @@
 									id="UpdateEmail-Submit-Button"
 									press="onUpdateEmailButtonPress"
 									text="{i18n>updateEmailViewFormUpdateEmailButtonText}" 
-									enabled="{ parts: [ { path: 'viewModel>/email' } ], 
+									enabled="{ parts: [ { path: 'viewModel>/newEmail' } ], 
 												formatter: '.isValidForm' }" />
 
 							</form:content>

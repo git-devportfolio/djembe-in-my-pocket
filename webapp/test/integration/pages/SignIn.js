@@ -20,7 +20,7 @@ sap.ui.define([
 				// 		errorMessage: "Was not able to find the control with the id SignIn-Page"
 				// 	});
 				// },
-				
+
 				iPressOnSignUpLink: function () {
 					return this.waitFor({
 						id: "SignIn-SignUp-Link",
@@ -106,7 +106,7 @@ sap.ui.define([
 						errorMessage: "Was not able to find the control with the id SignIn-PwForget-Link"
 					});
 				}
-				
+
 				// iPressButton_SignIn - Google - SignIn - Button: function () {
 				// 	return this.waitFor({
 				// 		id: "SignIn-Google-SignIn-Button",
@@ -236,18 +236,18 @@ sap.ui.define([
 						errorMessage: "Was not able to find the control type sap.m.MessageBox"
 					});
 				},
-				
+
 				iShouldGoToSignUpPage: function () {
 					return this.waitFor({
 						id: "SignUp-Page",
 						viewName: "SignUp",
 						success: function (oPage) {
-							Opa5.assert.ok(true, "The SignIn up is displayed");
+							Opa5.assert.ok(true, "The SignIn page is displayed");
 						},
 						errorMessage: "Was not able to find the control SignUp-Page"
 					});
 				},
-				
+
 				iShouldGoToPwForgetPage: function () {
 					return this.waitFor({
 						id: "PwForget-Page",
@@ -256,6 +256,17 @@ sap.ui.define([
 							Opa5.assert.ok(true, "The PwForget page is displayed");
 						},
 						errorMessage: "Was not able to find the control PwForget-Page"
+					});
+				},
+
+				iShouldGoToEmailVerificationPage: function () {
+					return this.waitFor({
+						id: "EmailVerification-Page",
+						viewName: "EmailVerification",
+						success: function (oPage) {
+							Opa5.assert.ok(true, "The EmailVerification page is displayed");
+						},
+						errorMessage: "Was not able to find the control EmailVerification-Page"
 					});
 				}
 			}

@@ -19,9 +19,13 @@ sap.ui.define([
 	 */
 	var Server = Object.extend("djembe.in.my.pocket.test.integration.Server", {
 
+		__oGetCurrentUserStub: null,
+		__oSendEmailVerificationStub: null,
+		__oSendPasswordResetEmailStub: null,
 		__oSignInWithEmailAndPasswordStub: null,
 		__oCreateUserWithEmailAndPasswordStub: null,
-
+		__oSetUserEmailAddressStub: null,
+		
 		////////////////////////////////////////////////////////////
 		//	CONSTRUCTOR
 		////////////////////////////////////////////////////////////
@@ -29,9 +33,12 @@ sap.ui.define([
 		constructor: function () {
 
 			this.__oIsAppInitStub = Sinon.stub(FirebaseService.getInstance(), "isAppInit");
+			this.__oGetCurrentUserStub = Sinon.stub(FirebaseService.getInstance(), "getCurrentUser");
+			this.__oSetUserEmailAddressStub = Sinon.stub(FirebaseService.getInstance(), "setUserEmailAddress");
+			this.__oSendEmailVerificationStub = Sinon.stub(FirebaseService.getInstance(), "sendEmailVerification");
+			this.__oSendPasswordResetEmailStub = Sinon.stub(FirebaseService.getInstance(), "sendPasswordResetEmail");
 			this.__oSignInWithEmailAndPasswordStub = Sinon.stub(FirebaseService.getInstance(), "signInWithEmailAndPassword");
 			this.__oCreateUserWithEmailAndPasswordStub = Sinon.stub(FirebaseService.getInstance(), "createUserWithEmailAndPassword");
-			this.__oSendPasswordResetEmailStub = Sinon.stub(FirebaseService.getInstance(), "sendPasswordResetEmail");
 		},
 
 		////////////////////////////////////////////////////////////
@@ -46,14 +53,26 @@ sap.ui.define([
 			return this.__oSignInWithEmailAndPasswordStub;
 		},
 
-		createUserWithEmailAndPasswordStub: function () {
+		getCreateUserWithEmailAndPasswordStub: function () {
+			return this.__oCreateUserWithEmailAndPasswordStub;
+		},
+
+		getSendEmailVerificationStub: function () {
 			return this.__oCreateUserWithEmailAndPasswordStub;
 		},
 		
 		getSendPasswordResetEmailStub: function () {
 			return this.__oSendPasswordResetEmailStub;
-		}
+		},
 
+		geSetUserEmailAddressStub: function () {
+			return this.__oSetUserEmailAddressStub;
+		},
+		
+		getCurrentUserStub: function() {
+			return this.__oGetCurrentUserStub;
+		}
+		
 	});
 
 	return {

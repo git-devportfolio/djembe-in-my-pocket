@@ -146,9 +146,9 @@ sap.ui.define([
 				var oUser = oUserCredential.user;
 
 				if (oUser && oUser.emailVerified) {
-					this.sendEvent(Constant.EVENTS.CHANNEL_ID, Constant.EVENTS.SIGN_IN); // Log User 
+					this.navTo(Constant.PAGES.RHYTHM_LIST);
 				} else {
-					this.sendEvent(Constant.EVENTS.CHANNEL_ID, Constant.EVENTS.EMAIL_VERIFICATION); // Confirm User Email
+					this.navTo(Constant.PAGES.EMAIL_VERIFICATION); // Confirm User Email
 				}
 			};
 
@@ -160,7 +160,7 @@ sap.ui.define([
 
 					MessageBox.warning(this.getTranslation(oError.code), {
 						onClose: function (oAction) {
-							this.__setInputEmailFocus(100);
+							this.__setInputEmailFocus(Constant.UI.DELAY_FOCUS);
 						}.bind(this)
 					});
 					break;
@@ -177,7 +177,7 @@ sap.ui.define([
 									email: oData.email
 								});
 							} else {
-								this.__setInputEmailFocus(100);
+								this.__setInputEmailFocus(Constant.UI.DELAY_FOCUS);
 								this.setViewModelProperty("viewModel", "/emailFocusOut", false);
 							}
 						}.bind(this)
@@ -194,7 +194,7 @@ sap.ui.define([
 							if (oAction === MessageBox.Action.YES) {
 								this.navTo(Constant.PAGES.PW_FORGET);
 							} else {
-								this.__setInputEmailFocus(100);
+								this.__setInputEmailFocus(Constant.UI.DELAY_FOCUS);
 								this.setViewModelProperty("viewModel", "/emailFocusOut", false);
 							}
 						}.bind(this)
@@ -311,9 +311,9 @@ sap.ui.define([
 			var oUser = FirebaseService.getInstance().getCurrentUser();
 			if (oUser && oUser.email) {
 				this.setViewModelProperty("viewModel", "/email", oUser.email);
-				this.__setInputPasswordFocus(400);
+				this.__setInputPasswordFocus(Constant.UI.DELAY_FOCUS);
 			} else {
-				this.__setInputEmailFocus(400);
+				this.__setInputEmailFocus(Constant.UI.DELAY_FOCUS);
 			}
 		},
 

@@ -4,7 +4,9 @@ sap.ui.define([
 	"./NavigationJourney",
 	"./SignInJourney",
 	"./SignUpJourney",
-	"./PwForgetJourney"
+	"./PwForgetJourney",
+	"./EmailVerificationJourney",
+	"./UpdateEmailJourney"
 ], function (Opa5, Startup) {
 	"use strict";
 

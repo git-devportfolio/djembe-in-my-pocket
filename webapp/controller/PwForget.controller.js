@@ -49,7 +49,7 @@ sap.ui.define([
 
 			// 
 			this.__setBindingForView();
-			this.__setInputEmailFocus(350);
+			this.__setInputEmailFocus(Constant.UI.DELAY_FOCUS);
 		},
 
 		///////////////////////////////////////////////////////////////////////
@@ -82,7 +82,7 @@ sap.ui.define([
 		//	}
 
 		/**
-		 * Nav to create account view
+		 * Nav to create Myaccount view
 		 * 
 		 * @public
 		 * @param {object} oEvent UI5 event
@@ -131,7 +131,7 @@ sap.ui.define([
 
 					MessageBox.warning(this.getTranslation(oError.code), {
 						onClose: function (oAction) {
-							this.__setInputEmailFocus(100);
+							this.__setInputEmailFocus(Constant.UI.DELAY_FOCUS);
 						}.bind(this)
 					});
 					break;
@@ -148,7 +148,7 @@ sap.ui.define([
 									email: sEmail
 								});
 							} else {
-								this.__setInputEmailFocus(100);
+								this.__setInputEmailFocus(Constant.UI.DELAY_FOCUS);
 							}
 						}.bind(this)
 					});

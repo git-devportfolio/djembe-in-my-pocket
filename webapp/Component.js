@@ -72,11 +72,19 @@ sap.ui.define([
 
 		/**
 		 * Function that initilize device model with all the device informations
-		 *
 		 * @public
 		 */
 		initDevice: function () {
 			this.setModel(models.createDeviceModel(), "device");
+		},
+
+		/**
+		 * Function that returns application version from manifest.json
+		 * @public
+		 */
+		getAppVersion: function () {
+			var oEntry = this.getMetadata().getManifestEntry("sap.app");
+			return oEntry.applicationVersion.version;
 		},
 
 		/**

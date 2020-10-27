@@ -11,7 +11,7 @@ sap.ui.define([
 	QUnit.module("SignIn Journey");
 
 	opaTest("Should see the sign in page", function (Given, When, Then) {
-		
+
 		// Arrangements
 		Given.iStartMyApp();
 
@@ -85,21 +85,21 @@ sap.ui.define([
 
 		// Arrangements
 		Given.iStartMyApp();
-		
+
 		// Action
 		When.onTheSignInView.iEnterCorrectEmail();
 		When.onTheSignInView.iEnterCorrectPassword();
 		When.onTheSignInView.iSubmitForm();
-		
+
 		// Assertions
 		Then.onTheSignInView.iShouldSeeUserNotFoundAlertMessage();
-		
+
 		// Action
 		When.onTheSignInView.iPressYesNoPopupOnNoButton();
-		
+
 		// Assertions
 		Then.onTheSignInView.iShouldSeePopupClosed();
-		
+
 		// Cleanup
 		Then.iTeardownMyApp();
 	});
@@ -114,7 +114,7 @@ sap.ui.define([
 					code: Constant.AUTH_ERRORS.WRONG_PASSWORD
 				});
 			}));
-			
+
 		// Arrangements
 		Given.iStartMyApp();
 
@@ -128,10 +128,10 @@ sap.ui.define([
 
 		// Action
 		When.onTheSignInView.iPressYesNoPopupOnNoButton();
-		
+
 		// Assertions
 		Then.onTheSignInView.iShouldSeePopupClosed();
-		
+
 		// Cleanup
 		Then.iTeardownMyApp();
 	});
@@ -142,23 +142,58 @@ sap.ui.define([
 
 		// Action
 		When.onTheSignInView.iPressOnPwForgetLink();
-		
+
 		// Assertions
 		Then.onTheSignInView.iShouldGoToPwForgetPage();
-		
+
 		// Cleanup
 		Then.iTeardownMyApp();
 	});
-	
+
 	opaTest("Should go to SignUp page", function (Given, When, Then) {
 		// Arrangements
 		Given.iStartMyApp();
 
 		// Action
 		When.onTheSignInView.iPressOnSignUpLink();
-		
+
 		// Assertions
 		Then.onTheSignInView.iShouldGoToSignUpPage();
+
+		// Cleanup
+		Then.iTeardownMyApp();
+	});
+
+	opaTest("Should go to email verification page", function (Given, When, Then) {
+		
+		// Mock getIsAppInit Firebase Call (BaseController)
+		Server
+			.getInstance()
+			.getIsAppInit()
+			.returns(true);
+			
+		// Mock SignInWithEmailAndPassword Firebase Call
+		Server
+			.getInstance()
+			.getSignInWithEmailAndPasswordStub()
+			.returns(new Promise(function (resolve, reject) {
+				resolve({
+					user: {
+						emailVerified: false
+					}
+				});
+			}));
+
+		// Arrangements
+		Given.iStartMyApp();
+
+		// Action
+		When.onTheSignInView.iEnterCorrectEmail();
+		When.onTheSignInView.iEnterCorrectPassword();
+		When.onTheSignInView.iSubmitForm();
+
+		// Assertions
+		Then.onTheSignInView.iShouldGoToEmailVerificationPage();
 		
 		// Cleanup
 		Then.iTeardownMyApp();

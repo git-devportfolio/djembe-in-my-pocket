@@ -108,69 +108,6 @@ sap.ui.define([
 						errorMessage: "Was not able to find the control with the id SignUp-SignIn-Link"
 					});
 				}
-				
-				// iPressLink_linkSignIn: function () {
-				// 	return this.waitFor({
-				// 		id: "linkSignIn",
-				// 		viewName: "SignUp",
-				// 		actions: new Press(),
-				// 		errorMessage: "Was not able to find the control with the id linkSignIn"
-				// 	});
-				// },
-				// iEnterTextInput_SignUp - SimpleForm - Input - Email: function () {
-				// 	return this.waitFor({
-				// 		id: "SignUp-SimpleForm-Input-Email",
-				// 		viewName: "SignUp",
-				// 		actions: new EnterText({
-				// 			text: "Text to enter in the control"
-				// 		}),
-				// 		errorMessage: "Was not able to find the control with the id SignUp-SimpleForm-Input-Email"
-				// 	});
-				// },
-				// iEnterTextInput_SignUp - SimpleForm - Input - Password - One: function () {
-				// 	return this.waitFor({
-				// 		id: "SignUp-SimpleForm-Input-Password-One",
-				// 		viewName: "SignUp",
-				// 		actions: new EnterText({
-				// 			text: "Text to enter in the control"
-				// 		}),
-				// 		errorMessage: "Was not able to find the control with the id SignUp-SimpleForm-Input-Password-One"
-				// 	});
-				// },
-				// iEnterTextInput_SignUp - SimpleForm - Input - Password - Two: function () {
-				// 	return this.waitFor({
-				// 		id: "SignUp-SimpleForm-Input-Password-Two",
-				// 		viewName: "SignUp",
-				// 		actions: new EnterText({
-				// 			text: "Text to enter in the control"
-				// 		}),
-				// 		errorMessage: "Was not able to find the control with the id SignUp-SimpleForm-Input-Password-Two"
-				// 	});
-				// },
-				// iPressButton_SignUp - Submit - Button: function () {
-				// 	return this.waitFor({
-				// 		id: "SignUp-Submit-Button",
-				// 		viewName: "SignUp",
-				// 		actions: new Press(),
-				// 		errorMessage: "Was not able to find the control with the id SignUp-Submit-Button"
-				// 	});
-				// },
-				// iPressButton_SignUp - Google - SignUp - Button: function () {
-				// 	return this.waitFor({
-				// 		id: "SignUp-Google-SignUp-Button",
-				// 		viewName: "SignUp",
-				// 		actions: new Press(),
-				// 		errorMessage: "Was not able to find the control with the id SignUp-Google-SignUp-Button"
-				// 	});
-				// },
-				// iPressButton_SignUp - Facebook - SignUp - Button: function () {
-				// 	return this.waitFor({
-				// 		id: "SignUp-Facebook-SignUp-Button",
-				// 		viewName: "SignUp",
-				// 		actions: new Press(),
-				// 		errorMessage: "Was not able to find the control with the id SignUp-Facebook-SignUp-Button"
-				// 	});
-				// }
 			},
 			assertions: {
 

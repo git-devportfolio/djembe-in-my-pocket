@@ -151,7 +151,7 @@ sap.ui.define([
 		// Mock SignInWithEmailAndPassword Firebase Call
 		Server
 			.getInstance()
-			.createUserWithEmailAndPasswordStub()
+			.getCreateUserWithEmailAndPasswordStub()
 			.returns(new Promise(function (resolve, reject) {
 				reject({
 					code: Constant.AUTH_ERRORS.EMAIL_ALREADY_IN_USE

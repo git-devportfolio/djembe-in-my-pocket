@@ -74,53 +74,41 @@
 				"clearControlAggregation": false
 			},
 			"routes": [{
+				"name": "LabBar",
+				"pattern": "LabBar",
+				"target": ["LabBar"]
+			}, {
 				"name": "SignIn",
 				"pattern": "",
-				"target": [
-					"SignIn"
-				]
+				"target": ["SignIn"]
 			}, {
 				"name": "SignUp",
 				"pattern": "SignUp/:email:",
-				"target": [
-					"SignUp"
-				]
+				"target": ["SignUp"]
 			}, {
 				"name": "PwForget",
 				"pattern": "PwForget",
-				"target": [
-					"PwForget"
-				]
+				"target": ["PwForget"]
 			}, {
 				"name": "Exception",
 				"pattern": "Exception",
-				"target": [
-					"Exception"
-				]
+				"target": ["Exception"]
 			}, {
-				"name": "Account",
-				"pattern": "Account",
-				"target": [
-					"Account"
-				]
+				"name": "MyAccount",
+				"pattern": "MyAccount",
+				"target": ["MyAccount"]
 			}, {
 				"name": "RhythmList",
 				"pattern": "RhythmList",
-				"target": [
-					"RhythmList"
-				]
+				"target": ["RhythmList"]
 			}, {
 				"name": "EmailVerification",
 				"pattern": "EmailVerification",
-				"target": [
-					"EmailVerification"
-				]
+				"target": ["EmailVerification"]
 			}, {
 				"name": "UpdateEmail",
 				"pattern": "UpdateEmail",
-				"target": [
-					"UpdateEmail"
-				]
+				"target": ["UpdateEmail"]
 			}],
 			"targets": {
 				"SignIn": {
@@ -139,9 +127,9 @@
 					"viewType": "XML",
 					"viewName": "Exception"
 				},
-				"Account": {
+				"MyAccount": {
 					"viewType": "XML",
-					"viewName": "Account"
+					"viewName": "MyAccount"
 				},
 				"RhythmList": {
 					"viewType": "XML",
@@ -154,6 +142,10 @@
 				"UpdateEmail": {
 					"viewType": "XML",
 					"viewName": "UpdateEmail"
+				},
+				"LabBar": {
+					"viewType": "XML",
+					"viewName": "LabBar"
 				}
 			}
 		},

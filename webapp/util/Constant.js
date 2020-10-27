@@ -6,7 +6,7 @@ sap.ui.define([], function () {
 		PAGES: {
 			SIGN_IN: "SignIn",
 			SIGN_UP: "SignUp",
-			ACCOUNT: "Account",
+			ACCOUNT: "MyAccount",
 			PW_FORGET: "PwForget",
 			EXCEPTION: "Exception",
 			RHYTHM_LIST: "RhythmList",
@@ -34,6 +34,14 @@ sap.ui.define([], function () {
 
 		FRAGMENTS: {
 			WARNING_POPOVER: "djembe.in.my.pocket.view.fragments.WarningPopover"
+		},
+
+		UI: {
+			DELAY_FOCUS: 400	/* 0 for OPA5 test else 400 */
+		},
+		
+		STORAGE: {
+			AVATAR: "avatar/"
 		}
 	};
 });

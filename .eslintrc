@@ -60,7 +60,7 @@
 		"space-before-function-paren": 0,
 		"lines-around-comment": 0,
 		"sap-no-proprietary-browser-api": 1,
-		"sap-no-element-creation": 2,
+		"sap-no-element-creation": 0,
 		"dot-location": 0,
 		"no-bitwise": 0,
 		"wrap-iife": [1, "any"],
